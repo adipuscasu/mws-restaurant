@@ -7,9 +7,17 @@
   <link rel="stylesheet" href="css/media-queries.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+  <link rel="manifest" href="img/favicon/site.webmanifest">
+  <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Restaurant Review project is the web application used
   for testing the implementation of good HTML5 recomandations. Mobile first, offline first
   and responsive design are key points here.">
+  <META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
   <title>Restaurant Reviews</title>
 </head>
 
@@ -34,13 +42,14 @@
           <option value="all">All Cuisines</option>
         </select>
       </div>
-      <ul id="restaurants-list"></ul>
+      <div id="restaurants-list"></div>
     </section>
   </main>
 
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeoN89ecaA1S1bmOrm1z38CJ-DQMv1pzg&libraries=places&callback=initMap"></script>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCiepz9cJ0ggzeNjwRUbcFMWxdb2wROmo&libraries=places&callback=initMap"></script>
 
 
   <footer id="footer">
