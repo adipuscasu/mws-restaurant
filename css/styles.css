@@ -109,7 +109,10 @@ nav h1 a {
   height: 50px;
   background-color: #3397DB;
   align-items: center;
-  display: inline;
+  display: flex;
+  display: -webkit-flex;
+  position: sticky;
+  top: 0;
 }
 .filter-options h2 {
   color: white;
@@ -184,19 +187,41 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
+.inside {
+  display: -ms-grid;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 80px 1fr 66px;
+  grid-template-areas:
+      "header header"
+      "content content"
+      "footer footer";
+}
 .inside header {
-  position: fixed;
-  top: 0;
   width: 100%;
   z-index: 1000;
+  grid-area: header;
+}
+
+.inside #maincontent {
+  grid-area: content;
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+      "restaurant-area map-area"
+      "reviews-area map-area";
+}
+.inside #restaurant-container {
+  grid-area: restaurant-area;
+}
+.inside #reviews-container {
+  grid-area: reviews-area;
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 50%;
+  grid-area: map-area;
 }
 .inside #map {
   background-color: #ccc;
@@ -204,9 +229,9 @@ nav h1 a {
   width: 100%;
 }
 .inside #footer {
-  bottom: 0;
-  position: absolute;
-  width: 50%;
+
+  /*! width: 100%; */
+  grid-area: footer;
 }
 #restaurant-name {
   color: #f18200;
@@ -241,10 +266,7 @@ nav h1 a {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 140px 40px 30px;
-  width: 50%;
-}
-#reviews-container {
-  padding: 30px 40px 80px;
+  width: 100%;
 }
 #reviews-container h2 {
   color: #f58500;
