@@ -58,11 +58,9 @@ function _cleanImageCache() {
 
     var tx = db.transaction('mws-restaurant');
     return tx.objectStore('mws-restaurant').getAll().then(function(messages) {
+      console.log(messages, "list of messages");
       messages.forEach(function(message) {
-        if (message.photo) {
-          imagesNeeded.push(message.photo);
-        }
-        imagesNeeded.push(message.avatar);
+        imagesNeeded.push(message);
       });
 
       return caches.open('mws-restaurant-content-imgs');
