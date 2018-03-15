@@ -1,3 +1,5 @@
+// implementation of service worker inspired from the Udacity course
+// Google Developer Challenge Scholarship: Mobile Web
 let restaurants,
   neighborhoods,
   cuisines
@@ -58,7 +60,6 @@ function _cleanImageCache() {
 
     var tx = db.transaction('mws-restaurant');
     return tx.objectStore('mws-restaurant').getAll().then(function(messages) {
-      console.log(messages, "list of messages");
       messages.forEach(function(message) {
         imagesNeeded.push(message);
       });
