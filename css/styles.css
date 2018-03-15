@@ -229,8 +229,6 @@ nav h1 a {
   width: 100%;
 }
 .inside #footer {
-
-  /*! width: 100%; */
   grid-area: footer;
 }
 #restaurant-name {

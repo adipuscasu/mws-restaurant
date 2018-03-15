@@ -2,7 +2,81 @@ let restaurants,
   neighborhoods,
   cuisines
 var map
-var markers = []
+var markers = [];
+// Let us open our database
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+var DBOpenRequest = window.indexedDB;
+DBOpenRequest.open("mws-restaurant", 1);
+
+_registerServiceWorker();
+
+
+setInterval(function() {
+_cleanImageCache();
+}, 1000 * 60 * 5);
+
+function openDatabase() {
+  // If the browser doesn't support service worker,
+  // we don't care about having a database
+  if (!navigator.serviceWorker) {
+    return Promise.resolve();
+  }
+
+  return DBOpenRequest.open('mws-restaurant', 1, function(upgradeDb) {
+    var store = upgradeDb.createObjectStore('mws-restaurant', {
+      keyPath: 'id'
+    });
+    store.createIndex('by-date', 'time');
+  });
+}
+
+function _registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('js/sw.js', {scope: '../'})
+      .catch(err => console.error('There is a problem', err));
+    });
+  }
+};
+
+  // Ensure refresh is only called once.
+  // This works around a bug in "force update on reload".
+  var refreshing;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    window.location.reload();
+    refreshing = true;
+  });
+
+
+
+function _cleanImageCache() {
+  return this._dbPromise.then(function(db) {
+    if (!db) return;
+
+    var imagesNeeded = [];
+
+    var tx = db.transaction('mws-restaurant');
+    return tx.objectStore('mws-restaurant').getAll().then(function(messages) {
+      messages.forEach(function(message) {
+        if (message.photo) {
+          imagesNeeded.push(message.photo);
+        }
+        imagesNeeded.push(message.avatar);
+      });
+
+      return caches.open('mws-restaurant-content-imgs');
+    }).then(function(cache) {
+      return cache.keys().then(function(requests) {
+        requests.forEach(function(request) {
+          var url = new URL(request.url);
+          if (!imagesNeeded.includes(url.pathname)) cache.delete(request);
+        });
+      });
+    });
+  });
+};
+
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
