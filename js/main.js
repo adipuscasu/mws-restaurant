@@ -35,10 +35,17 @@ function openDatabase() {
 function _registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('js/sw.js', {scope: '../'})
-      .catch(err => console.error('There is a problem', err));
-    });
-  }
+      this.console.log("app loaded test");
+      navigator.serviceWorker.register('http://localhost/mws-restaurant/service-worker.js')
+      .then(function(registration) {
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+      this.console.log("service worker registered ?");
+  });
+}
 };
 
   // Ensure refresh is only called once.
