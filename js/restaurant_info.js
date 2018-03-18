@@ -40,10 +40,21 @@ fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
+      addTabIndex();
       callback(null, restaurant)
     });
   }
 }
+
+ addTabIndex = () =>{
+  let maincontentElem = document.getElementById("maincontent");
+        let everything = maincontentElem.querySelectorAll("*");
+          for (let i=0; i<=everything.length; i++) {
+            if(everything[i]){
+              everything[i].setAttribute("tabindex",0);
+            }
+          }
+  };
 
 /**
  * Create restaurant HTML and add it to the webpage

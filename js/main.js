@@ -149,6 +149,15 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
+
+window.addEventListener('load', (event, restaurants = self.restaurants) => {
+  let map = document.getElementById("map");
+  let everything = map.querySelectorAll("*");
+    for (var i=0; i<=everything.length; i++) {
+      everything[i].setAttribute("tabindex",-1);
+    }
+});
+
 window.initMap = () => {
   let loc = {
     lat: 40.722216,
@@ -216,6 +225,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const childDiv = document.createElement('div');
+  childDiv.className = "restaurants-list-item";
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';

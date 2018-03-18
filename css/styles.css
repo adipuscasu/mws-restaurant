@@ -71,7 +71,6 @@ nav h1 a {
     background-color: #eee;
     font-size: 17px;
     margin: 0;
-    width: calc(50% - 80px);
 }
 
 /* Display list items side by side */
@@ -140,6 +139,13 @@ nav h1 a {
   margin: 0;
   padding: 30px 15px 60px;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.restaurants-list-item {
+  width: 300px;
+  margin: auto;
 }
 #restaurants-list li {
   background-color: #fff;
