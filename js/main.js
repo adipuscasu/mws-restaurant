@@ -35,8 +35,11 @@ function openDatabase() {
 function _registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      this.console.log("app loaded test");
-      navigator.serviceWorker.register('http://localhost/mws-restaurant/service-worker.js')
+      var newURL = window.location.protocol + "//" + window.location.host+ "/" + window.location.pathname;
+      this.console.log("app loaded test", newURL);
+      var fullSwPath = newURL + "/service-worker.js";
+      console.log(fullSwPath);
+      navigator.serviceWorker.register(fullSwPath)
       .then(function(registration) {
         console.log('Registration successful, scope is:', registration.scope);
       })
