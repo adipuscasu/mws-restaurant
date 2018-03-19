@@ -154,7 +154,9 @@ window.addEventListener('load', (event, restaurants = self.restaurants) => {
   let map = document.getElementById("map");
   let everything = map.querySelectorAll("*");
     for (var i=0; i<=everything.length; i++) {
-      everything[i].setAttribute("tabindex",-1);
+      if (everything[i]) {
+        everything[i].setAttribute("tabindex",-1);
+      }
     }
 });
 
