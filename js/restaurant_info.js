@@ -47,13 +47,20 @@ fetchRestaurantFromURL = (callback) => {
 }
 
  addTabIndex = () =>{
-  let maincontentElem = document.getElementById("maincontent");
-        let everything = maincontentElem.querySelectorAll("*");
-          for (let i=0; i<=everything.length; i++) {
-            if(everything[i]){
-              everything[i].setAttribute("tabindex",0);
+  let mapContainerElem = document.getElementById("map-container");
+        let everythingMap = mapContainerElem.querySelectorAll("*");
+          for (let i=0; i<=everythingMap.length; i++) {
+            if(everythingMap[i]){
+              everythingMap[i].setAttribute("tabindex",0);
             }
           }
+  let restaurantContainerElem = document.getElementById("restaurant-container");
+  let everythingRestaurant = restaurantContainerElem.querySelectorAll("*");
+    for (let i=0; i<=everythingRestaurant.length; i++) {
+      if(everythingRestaurant[i]){
+        everythingRestaurant[i].setAttribute("tabindex",0);
+      }
+    }
   };
 
 /**
