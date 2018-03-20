@@ -27,7 +27,7 @@
     ##Screen = B/w 768px to 1024px
   */
 
-  @media (min-width: 481px) and (max-width: 1024px) {
+  @media (max-width: 1024px) {
     .inside {
       display: -ms-grid;
       display: grid;
@@ -69,44 +69,6 @@
     .inside #footer {
       grid-area: footer;
     }
-
-
-  }
-
-  /*
-    ##Device = Tablets, Ipads (landscape)
-    ##Screen = B/w 768px to 1024px
-  */
-
-  @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-
-
-  }
-
-  /*
-    ##Device = Low Resolution Tablets, Mobiles (Landscape)
-    ##Screen = B/w 481px to 767px
-  */
-
-  @media (min-width: 481px) and (max-width: 767px) {
-
-
-
-  }
-
-  /*
-    ##Device = Most of the Smartphones Mobiles (Portrait)
-    ##Screen = B/w 320px to 479px
-  */
-
-  @media screen and (max-width: 480px) {
-
-    .filter-options {
-      height: 200px;
-      width: 100%;
-      display: inline-grid;
-    }
-
 
 
   }
