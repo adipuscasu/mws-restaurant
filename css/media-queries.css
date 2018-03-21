@@ -72,3 +72,62 @@
 
 
   }
+  @media screen and (max-width: 480px) {
+
+    .filter-options {
+      height: 200px;
+      width: 100%;
+      display: inline-grid;
+    }
+    #restaurats-list {
+      display: block;
+    }
+
+    #restaurants-list div {
+      width: 334px;
+    }
+
+    .inside {
+      display: -ms-grid;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 80px 1fr 66px;
+      grid-template-areas:
+          "header"
+          "content"
+          "footer";
+    }
+    .inside header {
+      width: 100%;
+      z-index: 1000;
+      grid-area: header;
+    }
+
+    .inside #maincontent {
+      grid-area: content;
+      display: grid;
+      display: -ms-grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      grid-template-areas:
+          "map-area"
+          "restaurant-area"
+          "reviews-area";
+    }
+    .inside #restaurant-container {
+      grid-area: restaurant-area;
+    }
+    .inside #reviews-container {
+      grid-area: reviews-area;
+    }
+    .inside #map-container {
+      background: blue none repeat scroll 0 0;
+      grid-area: map-area;
+    }
+
+    .inside #footer {
+      grid-area: footer;
+    }
+
+
+  }
