@@ -137,7 +137,7 @@ nav h1 a {
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
-  padding: 30px 0 60px;
+  padding: 30px 15px 60px;
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -214,10 +214,10 @@ nav h1 a {
   display: grid;
   display: -ms-grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 900px 1fr;
   grid-template-areas:
       "restaurant-area map-area"
-      "reviews-area map-area";
+      "reviews-area reviews-area";
 }
 .inside #restaurant-container {
   grid-area: restaurant-area;
@@ -269,7 +269,7 @@ nav h1 a {
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 20px 30px;
+  padding: 10px 40px 10px;
   width: 100%;
 }
 #reviews-container h2 {
