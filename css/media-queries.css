@@ -5,6 +5,45 @@
 */
 
 @media (min-width: 1281px) {
+    .inside {
+      display: -ms-grid;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 80px 1fr 66px;
+      grid-template-areas:
+          "header header"
+          "content content"
+          "footer footer";
+    }
+    .inside header {
+      width: 100%;
+      z-index: 1000;
+      grid-area: header;
+    }
+
+    .inside #maincontent {
+      grid-area: content;
+      display: grid;
+      display: -ms-grid;
+      grid-template-columns: 900px 1fr;
+      grid-template-rows: 900px 1fr;
+      grid-template-areas:
+          "restaurant-area map-area"
+          "reviews-area reviews-area";
+    }
+    .inside #restaurant-container {
+      grid-area: restaurant-area;
+    }
+    .inside #reviews-container {
+      grid-area: reviews-area;
+    }
+    .inside #map-container {
+      background: blue none repeat scroll 0 0;
+      grid-area: map-area;
+    }
+    .inside #footer {
+      grid-area: footer;
+    }
 
 
   }

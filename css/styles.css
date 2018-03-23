@@ -146,6 +146,8 @@ nav h1 a {
 .restaurants-list-item {
   width: 300px;
   margin: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 #restaurants-list li {
   background-color: #fff;
