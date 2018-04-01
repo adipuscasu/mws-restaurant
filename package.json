@@ -1,0 +1,53 @@
+{
+  "name": "mws-restaurant",
+  "version": "1.0.0",
+  "description": "A restaurant reviews website",
+  "main": "js/main.js",
+  "dependencies": {
+    "babel-register": "^6.26.0",
+    "gulp": "^4.0.0",
+    "idb": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/googlemaps": "^3.30.8",
+    "babel-core": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "browser-sync": "^2.23.6",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-jshint": "^2.1.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.2.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch-sass": "^1.4.1",
+    "jshint": "^2.9.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gulp": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adipuscasu/mws-restaurant-stage1.git"
+  },
+  "keywords": [
+    "udacity",
+    "restaurant",
+    "review",
+    "mobile",
+    "web",
+    "specialist"
+  ],
+  "author": "@forbiddenvoid @richardkalehoff @asparr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adipuscasu/mws-restaurant-stage1/issues"
+  },
+  "homepage": "https://github.com/adipuscasu/mws-restaurant-stage1#readme"
+}
