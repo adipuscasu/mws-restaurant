@@ -44,8 +44,12 @@
       <div id="restaurants-list"></div>
     </section>
   </main>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <!-- <script type="application/javascript" charset="utf-8" src="js/main.js"></script> -->
+  <!--This sets the baseUrl to the "scripts" directory, and
+    loads a script that will have a module ID of 'main'-->
+  <script data-main="./dist/scripts/main.js" src="./dist/scripts/require.js"></script>
+  <script type="application/javascript" charset="utf-8" src="./dist/scripts/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="./dist/scripts/restaurant_info.js"></script>
+  <script type="application/javascript" charset="utf-8" src="./dist/scripts/main.js"></script>
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCiepz9cJ0ggzeNjwRUbcFMWxdb2wROmo&libraries=places&callback=initMap"></script>

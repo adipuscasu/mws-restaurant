@@ -50,8 +50,8 @@ function scripts() {
     return gulp.src(paths.scripts.src, {sourcemaps: true})
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
-    .pipe(concat('main.js'))
-    .pipe(rename({suffix: '.min'}))
+    // .pipe(concat('main.js'))
+    // .pipe(rename({suffix: '.min'}))
     // .pipe(uglify())
     .pipe(gulp.dest('dist/scripts/'))
     .pipe(notify({ message: 'Scripts task complete' }));
