@@ -8,13 +8,29 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    return `./data/restaurants.json`;
+    return `http://localhost:1337/restaurants`;
   }
 
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
+  static fetchRestaurants(callback){
+    fetch(this.DATABASE_URL)
+      .then(function(response) {
+        if (response.status && response.status == 200) {
+          response.json().then(function(data) {
+            callback(null, data);
+          });
+        }
+
+      })
+      .then(function(myJson) {
+        const error = (`Request failed. Returned status of ${myJson}`);
+        callback(error, null);
+        console.log(myJson);
+      });
+  }
+  static fetchRestaurants3(callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
@@ -30,22 +46,25 @@ class DBHelper {
     xhr.send();
   }
 
-  /**
-   * Fetch a restaurant by its ID.
-   */
-  static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
+/**
+ * Fetch a restaurant by its ID.
+ */
+  static fetchRestaurantById(id,callback) {
+    const rUrl = this.DATABASE_URL+'/'+id;
+
+    fetch(rUrl)
+    .then(function(response) {
+      if (response.status && response.status == 200) {
+        response.json().then(function(data) {
+          callback(null, data);
+        });
       }
+
+    })
+    .then(function(myJson) {
+      const error = (`Request failed. Returned status of ${myJson}`);
+      callback(error, null);
+      console.log(myJson);
     });
   }
 
@@ -112,6 +131,7 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all neighborhoods from all restaurants
+        console.log(restaurants);
         const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
         // Remove duplicates from neighborhoods
         const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
@@ -149,7 +169,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`./img/${restaurant.photograph}`);
+    return (`./img/${restaurant.photograph}.jpg`);
   }
 
   /**

@@ -215,6 +215,10 @@ resetRestaurants = (restaurants) => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
+  console.log('restaurants:', restaurants);
+  if (!restaurants) {
+    return;
+  }
   const parentDiv = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     parentDiv.append(createRestaurantHTML(restaurant));

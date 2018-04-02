@@ -14,6 +14,7 @@ const notify = require('gulp-notify');
 const del = require('del');
 const browserSync = require('browser-sync');
 const server = browserSync.create();
+const exec = require('child_process').exec;
 const watch = () => gulp.watch([paths.scripts.src, paths.styles.src], gulp.series(scripts, reload))
 
 const dev = gulp.series(clean, scripts, styles, serve, watch);
@@ -35,6 +36,7 @@ function clean() {
     // for example if you are using del 2.0 or above, return its promise
     return del([ 'dist' ]);
   }
+
 
 function styles() {
     return gulp.src('./sass/**/*.scss')
