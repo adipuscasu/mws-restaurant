@@ -29,7 +29,8 @@
     "jshint": "^2.9.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall":"copy start_all.cmd \"node_modules/.bin\"",
+    "start_all": "start_all",
     "gulp": "gulp"
   },
   "repository": {

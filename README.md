@@ -1,5 +1,11 @@
+# Restaurant Reviews
+
+## Getting started
+- install node;
+- run npm install
+- to start the app, run: npm run-script start_all
+
  PROJECT SPECIFICATION
-# Restaurant Reviews: Stage 1
 # Steps to complete the project
 - Fork and clone the starter repository. The code in this repository will serve as your baseline to begin development.
 - You'll need your own Google Maps API key. Replace the text YOUR_GOOGLE_MAPS_API_KEY on line 37 of index.html with your own key.
