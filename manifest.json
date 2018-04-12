@@ -1,0 +1,45 @@
+{
+    "name": "MWS Restaurant",
+    "short_name": "MWS Restaurant",
+    "theme_color": "#2196F3",
+    "background_color": "#2196F3",
+    "description": "This app shows reviews for some restaurants.",
+    "proxy": "https://mysite.dev",
+    "devSsl": {
+      "key": "./localhost-ssl/localhost.key",
+      "cert": "./localhost-ssl/localhost.crt"
+    },
+    "icons": [
+      {
+        "src": "img/favicon/android-chrome-192x192.png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "img/favicon/android-chrome-512x512.png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "img/favicon/android-chrome-384x384.png",
+        "sizes": "384x384"
+      },
+      {
+        "src": "img/favicon/apple-touch-icon.png",
+        "sizes": "180x180"
+      },
+      {
+        "src": "img/favicon/favicon-16x16.png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "img/favicon/favicon-32x32.png",
+        "sizes": "32x32"
+      },
+      {
+        "src": "img/favicon/favicon.ico",
+        "sizes": "48x48"
+      }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "orientation": "landscape"
+  }

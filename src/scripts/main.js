@@ -1,64 +1,14 @@
+"use strict";
 // implementation of service worker inspired from the Udacity course
 // Google Developer Challenge Scholarship: Mobile Web
-let restaurants,
-  neighborhoods,
-  cuisines
-var map
-var markers = [];
-// Let us open our database
-window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-var DBOpenRequest = window.indexedDB;
-DBOpenRequest.open("mws-restaurant", 1);
 
-_registerServiceWorker();
-
+self.markers = [];
 
 setInterval(function() {
 _cleanImageCache();
 }, 1000 * 60 * 5);
 
-function openDatabase() {
-  // If the browser doesn't support service worker,
-  // we don't care about having a database
-  if (!navigator.serviceWorker) {
-    return Promise.resolve();
-  }
-
-  return DBOpenRequest.open('mws-restaurant', 1, function(upgradeDb) {
-    var store = upgradeDb.createObjectStore('mws-restaurant', {
-      keyPath: 'id'
-    });
-    store.createIndex('by-date', 'time');
-  });
-}
-
-function _registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register("./service-worker.js")
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-      this.console.log("service worker registered ?");
-  });
-}
-};
-
-  // Ensure refresh is only called once.
-  // This works around a bug in "force update on reload".
-  var refreshing;
-  navigator.serviceWorker.addEventListener('controllerchange', function() {
-    if (refreshing) return;
-    window.location.reload();
-    refreshing = true;
-  });
-
-
-
-function _cleanImageCache() {
+const _cleanImageCache = () => {
   return this._dbPromise.then(function(db) {
     if (!db) return;
 
@@ -94,7 +44,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-fetchNeighborhoods = () => {
+const fetchNeighborhoods = () => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
@@ -103,12 +53,12 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
-}
+};
 
 /**
  * Set neighborhoods HTML.
  */
-fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
+const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
@@ -116,12 +66,12 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.value = neighborhood;
     select.append(option);
   });
-}
+};
 
 /**
  * Fetch all cuisines and set their HTML.
  */
-fetchCuisines = () => {
+const fetchCuisines = () => {
   DBHelper.fetchCuisines((error, cuisines) => {
     if (error) { // Got an error!
       console.error(error);
@@ -130,12 +80,12 @@ fetchCuisines = () => {
       fillCuisinesHTML();
     }
   });
-}
+};
 
 /**
  * Set cuisines HTML.
  */
-fillCuisinesHTML = (cuisines = self.cuisines) => {
+const fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
 
   cuisines.forEach(cuisine => {
@@ -144,7 +94,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     option.value = cuisine;
     select.append(option);
   });
-}
+};
 
 /**
  * Initialize Google map, called from HTML.
@@ -176,7 +126,7 @@ window.initMap = () => {
 /**
  * Update page and map for current restaurants.
  */
-updateRestaurants = () => {
+function updateRestaurants () {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -188,8 +138,11 @@ updateRestaurants = () => {
 
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
-      console.error(error);
+      console.log(error);
     } else {
+      if (!restaurants) {
+        return;
+      }
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
     }
@@ -199,14 +152,18 @@ updateRestaurants = () => {
 /**
  * Clear current restaurants, their HTML and remove their map markers.
  */
-resetRestaurants = (restaurants) => {
+function resetRestaurants (restaurants) {
   // Remove all restaurants
   self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
   ul.innerHTML = '';
-
   // Remove all map markers
-  self.markers.forEach(m => m.setMap(null));
+  if (!self || !self.markers) {
+    return;
+  }
+  self.markers.forEach(function (m) {
+    m.setMap(null);
+  });
   self.markers = [];
   self.restaurants = restaurants;
 }
@@ -214,13 +171,15 @@ resetRestaurants = (restaurants) => {
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-fillRestaurantsHTML = (restaurants = self.restaurants) => {
-  console.log('restaurants:', restaurants);
+function fillRestaurantsHTML (restaurants = self.restaurants) {
   if (!restaurants) {
     return;
   }
   const parentDiv = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
+    if (!restaurant) {
+      return;
+    }
     parentDiv.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
@@ -229,7 +188,10 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
-createRestaurantHTML = (restaurant) => {
+function createRestaurantHTML (restaurant) {
+  if(!restaurant) {
+    return;
+  }
   const childDiv = document.createElement('div');
   childDiv.className = "restaurants-list-item";
 
@@ -254,15 +216,15 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  childDiv.append(more)
+  childDiv.append(more);
 
-  return childDiv
+  return childDiv;
 }
 
 /**
  * Add markers for current restaurants to the map.
  */
-addMarkersToMap = (restaurants = self.restaurants) => {
+function addMarkersToMap (restaurants = self.restaurants) {
   restaurants.forEach(restaurant => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);

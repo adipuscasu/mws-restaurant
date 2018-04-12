@@ -1,3 +1,28 @@
+
+const _registerServiceWorker = () => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register("./service-worker.js")
+      .then(function(registration) {
+        console.log('Registration successful, scope is:', registration.scope);
+        console.log("service worker", navigator.serviceWorker);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    });
+    // Ensure refresh is only called once.
+    // This works around a bug in "force update on reload".
+    var refreshing;
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      if (refreshing) return;
+      window.location.reload();
+      refreshing = true;
+    });
+  }
+};
+
+_registerServiceWorker();
 /**
  * Common database helper functions.
  */
@@ -17,15 +42,17 @@ class DBHelper {
   static fetchRestaurants(callback){
     fetch(this.DATABASE_URL)
       .then(function(response) {
-        if (response.status && response.status == 200) {
-          response.json().then(function(data) {
+        if (response.ok) {
+          response.json()
+          .then(function(data) {
             callback(null, data);
           });
+        } else {
+          throw response.statusText;
         }
 
       })
-      .then(function(myJson) {
-        const error = (`Request failed. Returned status of ${myJson}`);
+      .catch(function(error) {
         callback(error, null);
       });
   }
@@ -34,19 +61,23 @@ class DBHelper {
  * Fetch a restaurant by its ID.
  */
   static fetchRestaurantById(id,callback) {
+    if (!id) {
+      return;
+    }
     const rUrl = this.DATABASE_URL+'/'+id;
 
     fetch(rUrl)
     .then(function(response) {
-      if (response.status && response.status == 200) {
+      if (response.ok) {
         response.json().then(function(data) {
           callback(null, data);
         });
+      } else  {
+        throw response.statusText;
       }
 
     })
-    .then(function(myJson) {
-      const error = (`Request failed. Returned status of ${myJson}`);
+    .catch(function(error) {
       callback(error, null);
     });
   }
@@ -114,7 +145,6 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all neighborhoods from all restaurants
-        console.log(restaurants);
         const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
         // Remove duplicates from neighborhoods
         const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
@@ -133,9 +163,9 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all cuisines from all restaurants
-        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
         // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
+        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) === i);
         callback(null, uniqueCuisines);
       }
     });
@@ -152,6 +182,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
+    if (!restaurant || !restaurant.photograph) {
+      return (`./img/${restaurant.id}.jpg`);
+    }
     return (`./img/${restaurant.photograph}.jpg`);
   }
 

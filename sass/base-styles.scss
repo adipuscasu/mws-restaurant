@@ -3,22 +3,23 @@
 
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
+	font-size: 14pt;
 	color: #333;
-	line-height: 1.5;
+  line-height: 1.5;
+  min-width: 225px;
 }
 body {
 	background-color: #fdfdfd;
 	margin: 0;
-	position:relative;
+  position:relative;
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
+	font-size: 14pt;
 	color: #333;
 }
 a {
-	color: orange;
+	color: darkslategray;
 	text-decoration: none;
 }
 a:hover, a:focus {
@@ -41,12 +42,18 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 #footer {
   background-color: #444;
-  color: #aaa;
+  color: cornsilk;
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+}
+#footer > a {
+  color: white;
+}
+#footer > a:hover {
+  color: steelblue;
 }
 /* ====================== Navigation ====================== */
 nav {
@@ -113,7 +120,7 @@ nav h1 a {
   top: 0;
 }
 .filter-options h2 {
-  color: white;
+  color: black;
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
@@ -169,7 +176,7 @@ nav h1 a {
 #restaurants-list li h1 {
   color: #f18200;
   font-family: Arial,sans-serif;
-  font-size: 14pt;
+  font-size: 18pt;
   font-weight: 200;
   letter-spacing: 0;
   line-height: 1.3;

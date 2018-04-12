@@ -4,8 +4,6 @@
   "description": "A restaurant reviews website",
   "main": "js/main.js",
   "dependencies": {
-    "babel-register": "^6.26.0",
-    "gulp": "^4.0.0",
     "idb": "^2.1.1"
   },
   "devDependencies": {
@@ -22,14 +20,17 @@
     "gulp-concat": "^2.6.1",
     "gulp-jshint": "^2.1.0",
     "gulp-notify": "^3.2.0",
+    "gulp-npm-dist": "^1.0.1",
     "gulp-rename": "^1.2.2",
+    "gulp-rjs": "^0.1.0",
     "gulp-sass": "^3.2.1",
     "gulp-uglify": "^3.0.0",
     "gulp-watch-sass": "^1.4.1",
-    "jshint": "^2.9.5"
+    "jshint": "^2.9.5",
+    "requirejs": "^2.3.5"
   },
   "scripts": {
-    "postinstall":"copy start_all.cmd \"node_modules/.bin\"",
+    "postinstall": "copy start_all.cmd \"node_modules/.bin\"",
     "start_all": "start_all",
     "gulp": "gulp"
   },
@@ -47,6 +48,8 @@
   ],
   "author": "@forbiddenvoid @richardkalehoff @asparr",
   "license": "ISC",
+  "devUrl": "https://localhost:3000",
+  "proxyUrl": "https://localhost:3000",
   "bugs": {
     "url": "https://github.com/adipuscasu/mws-restaurant-stage1/issues"
   },

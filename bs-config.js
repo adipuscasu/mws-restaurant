@@ -1,1 +1,0 @@
-files: ["app/css/style.css", "app/js/*.js"]

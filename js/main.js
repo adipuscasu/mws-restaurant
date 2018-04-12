@@ -151,7 +151,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 
 window.addEventListener('load', (event, restaurants = self.restaurants) => {
-  let map = document.getElementById("map");
+  const map = document.getElementById("map");
   let everything = map.querySelectorAll("*");
     for (var i=0; i<=everything.length; i++) {
       if (everything[i]) {
@@ -161,7 +161,7 @@ window.addEventListener('load', (event, restaurants = self.restaurants) => {
 });
 
 window.initMap = () => {
-  let loc = {
+  const loc = {
     lat: 40.722216,
     lng: -73.987501
   };

@@ -1,5 +1,4 @@
-let restaurant;
-var map;
+let restaurant, map;
 
 /**
  * Initialize Google map, called from HTML.
@@ -15,6 +14,7 @@ window.initMap = () => {
         scrollwheel: false
       });
       fillBreadcrumb();
+      //test
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });

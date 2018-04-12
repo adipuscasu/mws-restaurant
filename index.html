@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
   <meta charset="utf-8">
   <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
@@ -46,7 +47,7 @@
   </main>
   <!--This sets the baseUrl to the "scripts" directory, and
     loads a script that will have a module ID of 'main'-->
-  <script data-main="./dist/scripts/main.js" src="./dist/scripts/require.js"></script>
+    <script type="module" src="./dist/scripts/idb/lib/idb.js" charset="utf-8"></script>
   <script type="application/javascript" charset="utf-8" src="./dist/scripts/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="./dist/scripts/restaurant_info.js"></script>
   <script type="application/javascript" charset="utf-8" src="./dist/scripts/main.js"></script>
