@@ -3,7 +3,7 @@
 ## Getting started
 - install node;
 - run npm install
-- to start the app, run: npm run-script start_all
+- to start the app, run: npm run-script serve
 
  PROJECT SPECIFICATION
 # Steps to complete the project

@@ -1,6 +1,6 @@
 {
-    "name": "MWS Restaurant",
-    "short_name": "MWS Restaurant",
+    "name": "MWS Restaurant Reviews",
+    "short_name": "R. Reviews",
     "theme_color": "#2196F3",
     "background_color": "#2196F3",
     "description": "This app shows reviews for some restaurants.",

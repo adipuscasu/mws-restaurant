@@ -69,7 +69,7 @@
     "jquery"        : false,
     "mocha"         : true,
     "mootools"      : false,
-    "node"          : false,
+    "node"          : true,
     "nonstandard"   : false,
     "phantom"       : false,
     "prototypejs"   : false,

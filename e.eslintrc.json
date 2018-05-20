@@ -1,0 +1,23 @@
+{
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+
+        "comma-dangle": ["error", "always"],
+        "no-cond-assign": ["error", "always"],
+
+        "no-console": "off"
+    }, "require-jsdoc": ["error", {
+        "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": false,
+            "ClassDeclaration": false,
+            "ArrowFunctionExpression": false,
+            "FunctionExpression": false
+        }
+    }],
+    "space-before-function-paren": ["error", { "anonymous": "ignore", "named": "always" }]
+}

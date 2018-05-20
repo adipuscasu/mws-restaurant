@@ -1,37 +1,32 @@
-"use strict";
+'use strict';
 // implementation of service worker inspired from the Udacity course
 // Google Developer Challenge Scholarship: Mobile Web
-
-self.markers = [];
-
-setInterval(function() {
-_cleanImageCache();
-}, 1000 * 60 * 5);
-
-const _cleanImageCache = () => {
-  return this._dbPromise.then(function(db) {
-    if (!db) return;
-
-    var imagesNeeded = [];
-
-    var tx = db.transaction('mws-restaurant');
-    return tx.objectStore('mws-restaurant').getAll().then(function(messages) {
-      messages.forEach(function(message) {
-        imagesNeeded.push(message);
-      });
-
-      return caches.open('mws-restaurant-content-imgs');
-    }).then(function(cache) {
-      return cache.keys().then(function(requests) {
-        requests.forEach(function(request) {
-          var url = new URL(request.url);
-          if (!imagesNeeded.includes(url.pathname)) cache.delete(request);
+const _registerServiceWorker = () => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('../../service-worker.js')
+        .then(function (registration) {
+          console.log('Registration successful, scope is:', registration.scope);
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      });
     });
-  });
+    // Ensure refresh is only called once.
+    // This works around a bug in "force update on reload".
+    let refreshing;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (refreshing) {
+        return;
+      }
+      window.location.reload();
+      refreshing = true;
+    });
+  }
 };
 
+_registerServiceWorker();
+self.markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -60,7 +55,7 @@ const fetchNeighborhoods = () => {
  */
 const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
-  neighborhoods.forEach(neighborhood => {
+  neighborhoods.forEach((neighborhood) => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
     option.value = neighborhood;
@@ -88,7 +83,7 @@ const fetchCuisines = () => {
 const fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
 
-  cuisines.forEach(cuisine => {
+  cuisines.forEach((cuisine) => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
     option.value = cuisine;
@@ -101,11 +96,11 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 
 window.addEventListener('load', (event, restaurants = self.restaurants) => {
-  let map = document.getElementById("map");
-  let everything = map.querySelectorAll("*");
-    for (var i=0; i<=everything.length; i++) {
+  let map = document.getElementById('map');
+  let everything = map.querySelectorAll('*');
+    for (let i=0; i<=everything.length; i++) {
       if (everything[i]) {
-        everything[i].setAttribute("tabindex",-1);
+        everything[i].setAttribute('tabindex', -1);
       }
     }
 });
@@ -113,15 +108,15 @@ window.addEventListener('load', (event, restaurants = self.restaurants) => {
 window.initMap = () => {
   let loc = {
     lat: 40.722216,
-    lng: -73.987501
+    lng: -73.987501,
   };
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: loc,
-    scrollwheel: false
+    scrollwheel: false,
   });
   updateRestaurants();
-}
+};
 
 /**
  * Update page and map for current restaurants.
@@ -146,7 +141,7 @@ function updateRestaurants () {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
     }
-  })
+  });
 }
 
 /**
@@ -176,7 +171,7 @@ function fillRestaurantsHTML (restaurants = self.restaurants) {
     return;
   }
   const parentDiv = document.getElementById('restaurants-list');
-  restaurants.forEach(restaurant => {
+  restaurants.forEach((restaurant) => {
     if (!restaurant) {
       return;
     }
@@ -189,11 +184,11 @@ function fillRestaurantsHTML (restaurants = self.restaurants) {
  * Create restaurant HTML.
  */
 function createRestaurantHTML (restaurant) {
-  if(!restaurant) {
+  if (!restaurant) {
     return;
   }
   const childDiv = document.createElement('div');
-  childDiv.className = "restaurants-list-item";
+  childDiv.className = 'restaurants-list-item';
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
@@ -216,6 +211,7 @@ function createRestaurantHTML (restaurant) {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
+  more.rel = 'noopener';
   childDiv.append(more);
 
   return childDiv;
@@ -225,11 +221,11 @@ function createRestaurantHTML (restaurant) {
  * Add markers for current restaurants to the map.
  */
 function addMarkersToMap (restaurants = self.restaurants) {
-  restaurants.forEach(restaurant => {
+  restaurants.forEach((restaurant) => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
     google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
+      window.location.href = marker.url;
     });
     self.markers.push(marker);
   });

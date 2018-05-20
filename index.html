@@ -19,6 +19,7 @@
   and responsive design are key points here.">
   <META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
   <title>Restaurant Reviews</title>
+  <script data-main="dist/scripts/main" src="dist/lib/require.js"></script>
 </head>
 
 <body>
@@ -47,10 +48,11 @@
   </main>
   <!--This sets the baseUrl to the "scripts" directory, and
     loads a script that will have a module ID of 'main'-->
-    <script type="module" src="./dist/scripts/idb/lib/idb.js" charset="utf-8"></script>
-  <script type="application/javascript" charset="utf-8" src="./dist/scripts/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="./dist/scripts/restaurant_info.js"></script>
-  <script type="application/javascript" charset="utf-8" src="./dist/scripts/main.js"></script>
+    <script type="module" src="./dist/lib/idb.min.js" charset="utf-8"></script>
+    <script type="application/javascript" charset="utf-8" src="./dist/scripts/idbHelper.js"></script>
+    <script type="application/javascript" charset="utf-8" src="./dist/scripts/dbhelper.js"></script>
+    <script type="application/javascript" charset="utf-8" src="./dist/scripts/restaurant_info.js"></script>
+    <script type="application/javascript" charset="utf-8" src="./dist/scripts/main.js"></script>
 
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCiepz9cJ0ggzeNjwRUbcFMWxdb2wROmo&libraries=places&callback=initMap"></script>
