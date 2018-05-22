@@ -1,4 +1,3 @@
-import { resolve } from "dns";
 
 'use strict';
 self.importScripts('./dist/scripts/idbHelper.js', './dist/lib/idb.js');
@@ -135,9 +134,7 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       caches.open(dataCacheName).then(function (cache) {
         return cache.match(event.request).then(function (response) {
-          console.log('before fetching:', event.request);
           return response || fetch(event.request).then(function (response) {
-            console.log('Response:', response.clone());
             // cache.put(event.request, response.clone());
             return response;
           });

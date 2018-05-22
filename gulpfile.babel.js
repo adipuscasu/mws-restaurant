@@ -8,10 +8,10 @@
     const babel = require('gulp-babel');
     const autoprefixer = require('gulp-autoprefixer');
     const concat = require('gulp-concat');
-    const rename = require('gulp-rename');
-    const uglify = require('gulp-uglify');
-    const jshint = require('gulp-jshint');
-    const notify = require('gulp-notify');
+    // const rename = require('gulp-rename');
+    // const uglify = require('gulp-uglify');
+    // const jshint = require('gulp-jshint');
+    // const notify = require('gulp-notify');
     const sourcemaps = require('gulp-sourcemaps');
     const imagemin = require('gulp-imagemin');
 

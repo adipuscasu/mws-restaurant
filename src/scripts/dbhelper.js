@@ -1,4 +1,3 @@
-import idb from 'idb';
 /**
  * Common database helper functions.
  */
@@ -18,9 +17,7 @@ class DBHelper {
    * @param {function} callback
    */
   static fetchRestaurants (callback) {
-    console.log('idb is:', idb);
     const idbHelper = new IDBHelper(idb);
-    console.log(idbHelper);
     fetch(this.DATABASE_URL)
     .then(function (response) {
       if (response.ok) {
@@ -40,6 +37,8 @@ class DBHelper {
 
   /**
    * Fetch a restaurant by its ID.
+   * @param {string} id
+   * @param {*} callback
    */
   static fetchRestaurantById (id, callback) {
     if (!id) {
@@ -51,7 +50,6 @@ class DBHelper {
       .then(function (response) {
         if (response.ok) {
           response.json().then(function (data) {
-            console.log('restaurant data: ', data);
             callback(null, data);
           });
         } else {
@@ -65,6 +63,8 @@ class DBHelper {
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
+   * @param {string} cuisine
+   * @param {*} callback
    */
   static fetchRestaurantByCuisine (cuisine, callback) {
     // Fetch all restaurants  with proper error handling
@@ -81,6 +81,8 @@ class DBHelper {
 
   /**
    * Fetch restaurants by a neighborhood with proper error handling.
+   * @param {string} neighborhood
+   * @param {*} callback
    */
   static fetchRestaurantByNeighborhood (neighborhood, callback) {
     // Fetch all restaurants
@@ -89,16 +91,22 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given neighborhood
-        const results = restaurants.filter((r) => r.neighborhood === neighborhood);
+        const results = restaurants.filter(
+          (r) => r.neighborhood === neighborhood);
         callback(null, results);
       }
     });
   }
 
   /**
-   * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
+   * Fetch restaurants by a cuisine
+   * and a neighborhood with proper error handling.
+   * @param {string} cuisine
+   * @param {string} neighborhood
+   * @param {*} callback
    */
-  static fetchRestaurantByCuisineAndNeighborhood (cuisine, neighborhood, callback) {
+  static fetchRestaurantByCuisineAndNeighborhood (
+    cuisine, neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -118,6 +126,7 @@ class DBHelper {
 
   /**
    * Fetch all neighborhoods with proper error handling.
+   *  @param {*} callback
    */
   static fetchNeighborhoods (callback) {
     // Fetch all restaurants
@@ -126,9 +135,11 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all neighborhoods from all restaurants
-        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
+        const neighborhoods = restaurants.map(
+          (v, i) => restaurants[i].neighborhood);
         // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) === i);
+        const uniqueNeighborhoods = neighborhoods.filter(
+          (v, i) => neighborhoods.indexOf(v) === i);
         callback(null, uniqueNeighborhoods);
       }
     });
@@ -136,6 +147,7 @@ class DBHelper {
 
   /**
    * Fetch all cuisines with proper error handling.
+   *  @param {*} callback
    */
   static fetchCuisines (callback) {
     // Fetch all restaurants
@@ -156,6 +168,8 @@ class DBHelper {
 
   /**
    * Restaurant page URL.
+   * @param {restaurant} restaurant
+   * @return {string}
    */
   static urlForRestaurant (restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
@@ -163,6 +177,8 @@ class DBHelper {
 
   /**
    * Restaurant image URL.
+   * @param {restaurant} restaurant
+   * @return {string}
    */
   static imageUrlForRestaurant (restaurant) {
     const mqTablet = window.matchMedia('(min-width: 450px)');
@@ -183,6 +199,9 @@ class DBHelper {
 
   /**
    * Map marker for a restaurant.
+   * @param {restaurant} restaurant
+   * @param {map} map
+   * @return {object}
    */
   static mapMarkerForRestaurant (restaurant, map) {
     const marker = new google.maps.Marker({
