@@ -11,7 +11,6 @@ const filesToCache = [
   '/dist/scripts/restaurant_info.js',
   '/dist/lib/idb.min.js',
   '/dist/lib/idb.js',
-  '/dist/lib/require.js',
   '/img/desktop/1.jpg',
   '/img/desktop/2.jpg',
   '/img/desktop/3.jpg',
@@ -50,6 +49,7 @@ const filesToCache = [
   '/img/favicon/safari-pinned-tab.svg',
   '/manifest.json',
 ];
+
 const idbHelper = new IDBHelper(idb);
 const restaurantsJsonRequest = 'http://localhost:1337/restaurants';
 
@@ -65,7 +65,7 @@ function cacheAssets () {
 }
 
 self.addEventListener('install', function (event) {
-  console.log('[ServiceWorker] Install', event);
+  console.log('[ServiceWorker] Install3', event);
   event.waitUntil(
     cacheAssets()
   );
@@ -107,8 +107,8 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-  // console.log('[Service Worker] Fetch', event.request.url);
   if (event.request.url.indexOf(restaurantsJsonRequest) > -1) {
+    console.log('request for restaurant data:', event.request.url);
     /*
      * When the request URL contains dataUrl, the app is asking for
      * json data. In this case, the service worker always goes to the
@@ -118,10 +118,25 @@ self.addEventListener('fetch', function (event) {
      */
     event.respondWith(
       caches.open(dataCacheName).then(function (cache) {
-        return fetch(event.request).then(function (response) {
+        return fetch(event.request)
+        .then(function (response) {
+          console.log('response from fetch: ', response.clone());
           idbHelper.saveRestaurant(response.clone());
           // cache.put(event.request.url, response.clone());
           return response;
+        })
+        .then(function (json) {
+          console.log('restaurant data: ', json);
+          return json;
+        })
+        .catch(function (error) {
+          console.log('There has been a problem with your fetch operation: ', error.message);
+          console.log('the fetch event was: ', event);
+          const rdata =  idbHelper.readAllIdbData().then(function (restaurants) {
+            console.log('data from idbHelper: ', restaurants);
+            return restaurants;
+          });
+          console.log('rdata: ', rdata);
         });
       })
     );
