@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 const fetchNeighborhoods = () => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
-      console.error(error);
+      console.error('fetch are o eroare', error);
     } else {
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();

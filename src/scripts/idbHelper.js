@@ -128,7 +128,8 @@ class IDBHelper {
      * @return {restaurants} restaurants
      */
     static readAllIdbData () {
-        return _DBPromise().then((db) => {
+        const dbPromise = this.openDatabase();
+        return dbPromise.then(function (db) {
             if (!db) {
                 return;
             }
