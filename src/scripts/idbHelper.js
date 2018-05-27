@@ -5,7 +5,7 @@ const dbName = 'mws-restaurant';
  */
 class IDBHelper {
     /**
-     * @description constructor _
+     * @description constructor
      * @param {"idb"} idb
      */
     constructor (idb) {
@@ -17,17 +17,14 @@ class IDBHelper {
         this.saveRestaurant = IDBHelper.saveRestaurant;
         this.readAllIdbData = IDBHelper.readAllIdbData;
     }
+
     /**
      * @description Gets a promise after opening the mws-restaurants database
      * @return {Promise} Promise
      */
     static openDatabase () {
-        // If the browser doesn't support service worker,
-        // we don't care about having a database
-        if (!navigator.serviceWorker) {
-            return Promise.resolve();
-        }
-        return idb.open(dbName, 1, function (upgradeDb) {
+        return this.idb.open(dbName, 1, function (upgradeDb) {
+            console.log('inside db open: ', upgradeDb);
             const store = upgradeDb.createObjectStore('restaurants', {
                 keyPath: 'id',
             });
@@ -124,21 +121,15 @@ class IDBHelper {
 
     /**
      * @description Returns all restaurants from the database
-     * @param {Promise} _DBPromise
+     * @param {*} db
      * @return {restaurants} restaurants
      */
-    static readAllIdbData () {
-        const dbPromise = this.openDatabase();
-        return dbPromise.then(function (db) {
-            if (!db) {
-                return;
-            }
-            console.log('readAllData database: ', db);
-            let tx = db.transaction(['restaurants'], 'readonly');
-            let store = tx.objectStore('restaurants');
-            return store.getAll();
-        }).then((items) => {
-            console.log('items retrieved: ', items);
-        });
+    static readAllIdbData (db) {
+        if (!db) {
+            return Promise.resolve();
+        }
+        let tx = db.transaction(['restaurants'], 'readonly');
+        let store = tx.objectStore('restaurants');
+        return store.getAll();
     }
 }
