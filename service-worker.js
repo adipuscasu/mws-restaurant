@@ -51,7 +51,6 @@ const filesToCache = [
 ];
 
 const idbHelper = new IDBHelper(idb);
-const restaurantsJsonRequest = 'http://localhost:1337/restaurants';
 
 /**
  * @description It caches the list of static resources
@@ -103,11 +102,11 @@ self.addEventListener('activate', function (event) {
    * service worker is not yet activated. The code below essentially lets
    * you activate the service worker faster.
    */
-  // return self.clients.claim();
+  return self.clients.claim();
 });
 
 self.addEventListener('fetch', function (event) {
-  if (event.request.url.indexOf(restaurantsJsonRequest) > -1) {
+  if (event.request.url.endsWith('restaurants')) {
     console.log('request for restaurant data:', event.request.url);
     /*
      * When the request URL contains dataUrl, the app is asking for
@@ -116,28 +115,41 @@ self.addEventListener('fetch', function (event) {
      * network" strategy:
      * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
      */
+    const responseConfig = {
+      'status': 200,
+      'statusText': 'OK',
+      'Content-Type': 'application/json'};
     event.respondWith(
-      caches.open(dataCacheName).then(function (cache) {
-        return fetch(event.request)
+      fetch(event.request)
         .then(function (response) {
-          console.log('response from fetch: ', response.clone());
-          idbHelper.saveRestaurant(response.clone());
-          // cache.put(event.request.url, response.clone());
-          return response;
+          console.log('response is: ', response.status);
+          if (response.status === 200) {
+            console.log('response from fetch: ', response.clone());
+            idbHelper.saveRestaurant(response.clone());
+            // cache.put(event.request.url, response.clone());
+            return response;
+          } else {
+            console.log('error', response);
+          }
         })
         .then(function (json) {
           console.log('restaurant data: ', json);
           return json;
         })
         .catch(function (error) {
-          console.log('There has been a problem with your fetch operation: ', error.message);
+          console.log('There has been a problem with your fetch operation: ',
+           error.message);
           console.log('the fetch event was: ', event);
-          const rdata =  idbHelper.readAllIdbData().then(function (restaurants) {
-            console.log('data from idbHelper: ', restaurants);
-            return restaurants;
-          });
-          console.log('rdata: ', rdata);
-        });
+          const DBPromise = idbHelper.openDatabase();
+            DBPromise.then(function (db) {
+              idbHelper.readAllIdbData(db).then(function (restaurants) {
+                // responseConfig.url = event.request.url;
+                let myResponse = new Response(restaurants, responseConfig);
+                console.log('the proper response is: ', myResponse);
+                console.log('data from idbHelper: ', restaurants);
+                return myResponse;
+              });
+            });
       })
     );
   } else {
