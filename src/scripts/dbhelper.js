@@ -31,8 +31,15 @@ class DBHelper {
       }
     })
     .catch(function (error) {
-      callback(error, null);
-    });
+      console.log('error: ', error);
+      const DBPromise = idbHelper.openDatabase();
+      DBPromise.then(function (db) {
+        idbHelper.readAllIdbData(db).then(function (restaurants) {
+          console.log('data from idbHelper: ', restaurants);
+          callback(null, restaurants);
+          });
+        });
+  });
   }
 
   /**

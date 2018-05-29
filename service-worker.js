@@ -106,7 +106,7 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-  if (event.request.url.endsWith('restaurants')) {
+  if (event.request.url.indexOf('1337/restaurants') > -1) {
     console.log('request for restaurant data:', event.request.url);
     /*
      * When the request URL contains dataUrl, the app is asking for
@@ -115,42 +115,16 @@ self.addEventListener('fetch', function (event) {
      * network" strategy:
      * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
      */
-    const responseConfig = {
-      'status': 200,
-      'statusText': 'OK',
-      'Content-Type': 'application/json'};
+    
     event.respondWith(
       fetch(event.request)
         .then(function (response) {
-          console.log('response is: ', response.status);
-          if (response.status === 200) {
-            console.log('response from fetch: ', response.clone());
-            idbHelper.saveRestaurant(response.clone());
-            // cache.put(event.request.url, response.clone());
-            return response;
-          } else {
-            console.log('error', response);
-          }
-        })
-        .then(function (json) {
-          console.log('restaurant data: ', json);
-          return json;
+          return response;
         })
         .catch(function (error) {
-          console.log('There has been a problem with your fetch operation: ',
-           error.message);
-          console.log('the fetch event was: ', event);
-          const DBPromise = idbHelper.openDatabase();
-            DBPromise.then(function (db) {
-              idbHelper.readAllIdbData(db).then(function (restaurants) {
-                // responseConfig.url = event.request.url;
-                let myResponse = new Response(restaurants, responseConfig);
-                console.log('the proper response is: ', myResponse);
-                console.log('data from idbHelper: ', restaurants);
-                return myResponse;
-              });
-            });
-      })
+          console.log('error in service worker fetch: ', error);
+          return Promise.resolve();
+        })
     );
   } else {
     /*
