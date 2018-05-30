@@ -16,6 +16,7 @@ class IDBHelper {
         this.populateDatabase = IDBHelper.populateDatabase;
         this.saveRestaurant = IDBHelper.saveRestaurant;
         this.readAllIdbData = IDBHelper.readAllIdbData;
+        this.getRestaurantById = IDBHelper.getRestaurantById;
     }
 
     /**
@@ -131,5 +132,21 @@ class IDBHelper {
         let tx = db.transaction(['restaurants'], 'readonly');
         let store = tx.objectStore('restaurants');
         return store.getAll();
+    }
+
+    /**
+     * @description Returns a restaurant object
+     * @param {IDBDatabase} db
+     * @param {Number} restaurantId
+     * @return {restaurant} restaurant
+     */
+    static getRestaurantById (db, restaurantId) {
+        if (!db) {
+            return Promise.resolve();
+        }
+        const tx = db.transaction(['restaurants'], 'readonly');
+        const store = tx.objectStore('restaurants');
+        const id = parseInt(restaurantId);
+        return store.get(id);
     }
 }

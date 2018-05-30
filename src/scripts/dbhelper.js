@@ -2,6 +2,7 @@
  * Common database helper functions.
  */
 class DBHelper {
+
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.c
@@ -34,8 +35,7 @@ class DBHelper {
       console.log('error: ', error);
       const DBPromise = idbHelper.openDatabase();
       DBPromise.then(function (db) {
-        idbHelper.readAllIdbData(db).then(function (restaurants) {
-          console.log('data from idbHelper: ', restaurants);
+        return idbHelper.readAllIdbData(db).then(function (restaurants) {
           callback(null, restaurants);
           });
         });
@@ -51,6 +51,8 @@ class DBHelper {
     if (!id) {
       return;
     }
+    console.log('fetching restaurant by id');
+    const idbHelper = new IDBHelper(idb);
     const rUrl = this.DATABASE_URL + '/' + id;
 
     fetch(rUrl)
@@ -64,8 +66,14 @@ class DBHelper {
         }
       })
       .catch(function (error) {
-        callback(error, null);
-      });
+        console.log('error: ', error);
+        const DBPromise = idbHelper.openDatabase();
+        DBPromise.then(function (db) {
+          idbHelper.getRestaurantById(db, id).then(function (restaurant) {
+            callback(null, restaurant);
+            });
+          });
+    });
   }
 
   /**

@@ -123,7 +123,6 @@ self.addEventListener('fetch', function (event) {
         })
         .catch(function (error) {
           console.log('error in service worker fetch: ', error);
-          return Promise.resolve();
         })
     );
   } else {
