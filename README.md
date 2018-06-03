@@ -1,9 +1,13 @@
 # Restaurant Reviews
 
 ## Getting started
+
 - install node;
-- run npm install
-- to start the app, run: npm run-script serve
+- run `npm install`
+- run `cd server`
+- run `npm install`
+- run `cd ..`
+- to start the app, run: `gulp`
 
  PROJECT SPECIFICATION
 # Steps to complete the project

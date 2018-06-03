@@ -5,11 +5,14 @@
 */
 
 @media (min-width: 1281px) {
+  body,td,th,p{
+    min-width: 225px;
+  }
     .inside {
       display: -ms-grid;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 80px 1fr 66px;
+      grid-template-rows: 80px 1100px 66px;
       grid-template-areas:
           "header header"
           "content content"
@@ -112,6 +115,9 @@
 
   }
   @media screen and (max-width: 580px) {
+    body,td,th,p{
+      min-width: 125px;
+    }
 
     .filter-options select {
       margin: auto;
@@ -151,7 +157,7 @@
       display: grid;
       display: -ms-grid;
       grid-template-columns: 1fr;
-      grid-template-rows: 450px 700px 1fr;
+      grid-template-rows: 450px 900px 1fr;
       grid-template-areas:
           "map-area"
           "restaurant-area"
@@ -173,4 +179,21 @@
     }
 
 
+  }
+
+    @media screen and (max-width: 320px) {
+      body,td,th,p{
+        min-width: 50px;
+      }
+      .inside #maincontent {
+        grid-area: content;
+        display: grid;
+        display: -ms-grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 450px 900px 1fr;
+        grid-template-areas:
+            "map-area"
+            "restaurant-area"
+            "reviews-area";
+      }
   }

@@ -11,21 +11,21 @@ window.initMap = () => {
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: restaurant.latlng,
-        scrollwheel: false
+        scrollwheel: false,
       });
       fillBreadcrumb();
-      //test
+      // test
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
-}
+};
 
 /**
  * Get current restaurant from page URL.
  */
 self.fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    callback(null, self.restaurant);
     return;
   }
   const id = getParameterByName('id');
@@ -41,24 +41,24 @@ self.fetchRestaurantFromURL = (callback) => {
       }
       fillRestaurantHTML();
       addTabIndex();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
-}
+};
 
 self.addTabIndex = () =>{
-  let mapContainerElem = document.getElementById("map-container");
-        let everythingMap = mapContainerElem.querySelectorAll("*");
+  let mapContainerElem = document.getElementById('map-container');
+        let everythingMap = mapContainerElem.querySelectorAll('*');
           for (let i=0; i<=everythingMap.length; i++) {
-            if(everythingMap[i]){
-              everythingMap[i].setAttribute("tabindex",0);
+            if (everythingMap[i]) {
+              everythingMap[i].setAttribute('tabindex', 0);
             }
           }
-  let restaurantContainerElem = document.getElementById("restaurant-container");
-  let everythingRestaurant = restaurantContainerElem.querySelectorAll("*");
+  let restaurantContainerElem = document.getElementById('restaurant-container');
+  let everythingRestaurant = restaurantContainerElem.querySelectorAll('*');
     for (let i=0; i<=everythingRestaurant.length; i++) {
-      if(everythingRestaurant[i]){
-        everythingRestaurant[i].setAttribute("tabindex",0);
+      if (everythingRestaurant[i]) {
+        everythingRestaurant[i].setAttribute('tabindex', 0);
       }
     }
   };
@@ -75,7 +75,7 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
-  image.alt =  `a photo of ${restaurant.name}'s interior`
+  image.alt = `a photo of ${restaurant.name}'s interior`;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -87,7 +87,7 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   fillReviewsHTML();
-}
+};
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -107,14 +107,14 @@ self.fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours
 
     hours.appendChild(row);
   }
-}
+};
 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
 self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
@@ -125,11 +125,11 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+  reviews.forEach((review) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-}
+};
 
 /**
  * Create review HTML and add it to the webpage.
@@ -153,7 +153,7 @@ self.createReviewHTML = (review) => {
   li.appendChild(comments);
 
   return li;
-}
+};
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
@@ -163,20 +163,20 @@ self.fillBreadcrumb = (restaurant=self.restaurant) => {
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
-}
+};
 
 /**
  * Get a parameter by name from page URL.
  */
 self.getParameterByName = (name, url) => {
   if (!url)
-    url = window.location.href;
+    {url = window.location.href;}
   name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
   if (!results)
-    return null;
+    {return null;}
   if (!results[2])
-    return '';
+    {return '';}
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };

@@ -196,20 +196,12 @@ class DBHelper {
    * @return {string}
    */
   static imageUrlForRestaurant (restaurant) {
-    const mqTablet = window.matchMedia('(min-width: 450px)');
-    const mqDestop = window.matchMedia('(min-width: 800px)');
     let imgAddress = restaurant.photograph;
 
     if (!restaurant || !restaurant.photograph) {
       imgAddress = restaurant.id;
     }
-    if (mqDestop.matches) {
-      return (`/img/desktop/${imgAddress}.jpg`);
-    } else if (mqTablet.matches) {
-      return (`/img/tablet/${imgAddress}.jpg`);
-    } else {
-      return (`/img/mobile/${imgAddress}.jpg`);
-    }
+    return (`dist/img/${imgAddress}.webp`);
   }
 
   /**

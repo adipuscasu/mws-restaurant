@@ -14,10 +14,12 @@
     // const notify = require('gulp-notify');
     const sourcemaps = require('gulp-sourcemaps');
     const imagemin = require('gulp-imagemin');
-
+    const imageminWebp = require('imagemin-webp');
     const del = require('del');
     const browserSync = require('browser-sync');
     const server = browserSync.create();
+    const exec = require('child_process').exec;
+    const webp = require('gulp-webp');
 
     const paths = {
         styles: {
@@ -60,7 +62,22 @@
             gulp.series( copyHtml)).on('change', browserSync.reload);
     };
 
-    const dev = gulp.series(clean,
+    const lightHouseServer = (cb) => {
+        exec('cd server && node server.js', function (err, stdout, stderr) {
+            console.log(stdout);
+            console.log(stderr);
+            cb(err);
+          });
+        exec('cd ..', function (err, stdout, stderr) {
+            console.log(stdout);
+            console.log(stderr);
+            cb(err);
+        });
+    };
+
+    const dev = gulp.series(
+        lightHouseServer,
+        clean,
         copyLibs,
         scripts,
         styles,
@@ -152,7 +169,12 @@
      */
     function copyImages () {
         return gulp.src('img/*')
-            .pipe(imagemin())
+            .pipe(webp())
+            .pipe(imagemin(['img/*.{jpg,png}'], 'dist/img/', {
+                    use: [
+                        imageminWebp({quality: 50})
+                    ]
+                }))
             .pipe(gulp.dest('dist/img'));
     }
 
@@ -177,6 +199,7 @@
     exports.watch = watch;
     exports.copyHtml = copyHtml;
     exports.copyImages = copyImages;
+    exports.lightHouseServer = lightHouseServer;
 
     gulp.task('default', (done, error) => {
         dev();
@@ -188,4 +211,5 @@
     gulp.task('copyHtml', copyHtml);
     gulp.task('copyImages', copyImages);
     gulp.task('copyLibs', copyLibs);
+    gulp.task('lightHouseServer', lightHouseServer);
 })();
