@@ -193,6 +193,7 @@ function createRestaurantHTML (restaurant) {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image['data-src'] = image.src;
   image.alt = `a photo of ${restaurant.name}'s interior`;
   childDiv.append(image);
 

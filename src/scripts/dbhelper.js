@@ -2,7 +2,6 @@
  * Common database helper functions.
  */
 class DBHelper {
-
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.c
@@ -198,10 +197,15 @@ class DBHelper {
   static imageUrlForRestaurant (restaurant) {
     let imgAddress = restaurant.photograph;
 
+    const nAHasChrome = navigator.userAgent.indexOf('Chrome') > -1;
+    const nAHasNotEdge = navigator.userAgent.indexOf('Edge') === -1;
+    const isChromeBrowser = nAHasChrome && nAHasNotEdge;
+
+    const imgExtension = isChromeBrowser ? 'webp' : 'jpg';
     if (!restaurant || !restaurant.photograph) {
       imgAddress = restaurant.id;
     }
-    return (`dist/img/${imgAddress}.webp`);
+    return (`dist/img/${imgAddress}.${imgExtension}`);
   }
 
   /**

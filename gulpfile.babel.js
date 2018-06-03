@@ -82,6 +82,7 @@
         scripts,
         styles,
         copyImages,
+        copyImagesToJpeg,
         copyHtml,
         serve,
         watch);
@@ -170,11 +171,42 @@
     function copyImages () {
         return gulp.src('img/*')
             .pipe(webp())
+            .pipe(imagemin([
+                imagemin.gifsicle({interlaced: true}),
+                imagemin.jpegtran({progressive: true}),
+                imagemin.optipng({optimizationLevel: 5}),
+                imagemin.svgo({
+                    plugins: [
+                        {removeViewBox: true},
+                        {cleanupIDs: false},
+                    ],
+                }),
+            ]))
             .pipe(imagemin(['img/*.{jpg,png}'], 'dist/img/', {
                     use: [
-                        imageminWebp({quality: 50})
-                    ]
+                        imageminWebp({quality: 50}),
+                    ],
                 }))
+            .pipe(gulp.dest('dist/img'));
+    }
+
+        /**
+     * @description Gulp process to copy image files
+     * @return {void}
+     */
+    function copyImagesToJpeg () {
+        return gulp.src('img/*')
+            .pipe(imagemin([
+                imagemin.gifsicle({interlaced: true}),
+                imagemin.jpegtran({progressive: true}),
+                imagemin.optipng({optimizationLevel: 30}),
+                imagemin.svgo({
+                    plugins: [
+                        {removeViewBox: true},
+                        {cleanupIDs: false},
+                    ],
+                }),
+            ]))
             .pipe(gulp.dest('dist/img'));
     }
 
@@ -199,6 +231,7 @@
     exports.watch = watch;
     exports.copyHtml = copyHtml;
     exports.copyImages = copyImages;
+    exports.copyImagesToJpeg = copyImagesToJpeg;
     exports.lightHouseServer = lightHouseServer;
 
     gulp.task('default', (done, error) => {
@@ -210,6 +243,7 @@
     gulp.task('styles', styles);
     gulp.task('copyHtml', copyHtml);
     gulp.task('copyImages', copyImages);
+    gulp.task('copyImagesToJpeg', copyImagesToJpeg);
     gulp.task('copyLibs', copyLibs);
     gulp.task('lightHouseServer', lightHouseServer);
 })();

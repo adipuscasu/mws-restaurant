@@ -308,3 +308,7 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+/* Prevents img without src to appear */
+img:not([src]) {
+  visibility: hidden;
+}
