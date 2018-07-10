@@ -25,7 +25,7 @@ const _registerServiceWorker = () => {
   }
 };
 
-_registerServiceWorker();
+// _registerServiceWorker();
 self.markers = [];
 
 /**
