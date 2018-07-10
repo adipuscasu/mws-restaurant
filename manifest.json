@@ -4,7 +4,7 @@
     "theme_color": "#2196F3",
     "background_color": "#2196F3",
     "description": "This app shows reviews for some restaurants.",
-    "proxy": "https://mysite.dev",
+    "proxy": "https://gulp.dev",
     "devSsl": {
       "key": "./localhost-ssl/localhost.key",
       "cert": "./localhost-ssl/localhost.crt"
