@@ -19,26 +19,26 @@ class DBHelper {
   static fetchRestaurants (callback) {
     const idbHelper = new IDBHelper(idb);
     fetch(this.DATABASE_URL)
-    .then(function (response) {
-      if (response.ok) {
-        response.json()
-          .then(function (data) {
-            idbHelper.populateDatabase(data);
-            callback(null, data);
-          });
-      } else {
-        throw response.statusText;
-      }
-    })
-    .catch(function (error) {
-      console.log('error: ', error);
-      const DBPromise = idbHelper.openDatabase();
-      DBPromise.then(function (db) {
-        return idbHelper.readAllIdbData(db).then(function (restaurants) {
-          callback(null, restaurants);
+      .then(function (response) {
+        if (response.ok) {
+          response.json()
+            .then(function (data) {
+              idbHelper.populateDatabase(data);
+              callback(null, data);
+            });
+        } else {
+          throw response.statusText;
+        }
+      })
+      .catch(function (error) {
+        console.log('error: ', error);
+        const DBPromise = idbHelper.openDatabase();
+        DBPromise.then(function (db) {
+          return idbHelper.readAllIdbData(db).then(function (restaurants) {
+            callback(null, restaurants);
           });
         });
-  });
+      });
   }
 
   /**
@@ -70,9 +70,45 @@ class DBHelper {
         DBPromise.then(function (db) {
           idbHelper.getRestaurantById(db, id).then(function (restaurant) {
             callback(null, restaurant);
-            });
           });
-    });
+        });
+      });
+  }
+
+  /**
+   * Sets favorite to true or false for a restaurant
+   * @param {restaurant} restaurant object
+   * @param {callback} callback function
+   */
+  static setRestaurantFavorite (restaurant, callback) {
+    if (!restaurant || !restaurant.id) {
+      return;
+    }
+    let isFavorite = restaurant.is_favorite === 'true';
+    const rUrl = this.DATABASE_URL + '/' + restaurant.id +
+      '/?is_favorite=' + !isFavorite;
+    fetch(rUrl, {
+        method: 'PUT',
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache',
+        credentials: 'same-origin', // include, same-origin, *omit
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify({}),
+        // body data type must match "Content-Type" header
+      })
+      .then((response) => response.json()
+        .then(function (data) {
+          if (callback) {
+            callback(null, data);
+          }
+        })
+      ) // parses response to JSON
+      .catch((error) => console.error(`Fetch Error =\n`, error));
   }
 
   /**

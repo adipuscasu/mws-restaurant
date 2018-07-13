@@ -16,16 +16,17 @@ const _registerServiceWorker = () => {
     // This works around a bug in "force update on reload".
     let refreshing;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
+      console.log(this);
       if (refreshing) {
         return;
       }
-      window.location.reload();
+      // window.location.reload();
       refreshing = true;
     });
   }
 };
 
-// _registerServiceWorker();
+ _registerServiceWorker();
 self.markers = [];
 
 /**
