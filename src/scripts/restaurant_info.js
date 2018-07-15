@@ -99,7 +99,7 @@ self.addFavoriteButton = (container) => {
   // adds the Favorite/Unfavorite button
   const favImg = document.createElement('img');
   favImg.classList.add('div-img-pull-right');
-  let aImgSrc = '/img/favorite_star_56x56.png';
+  let aImgSrc = '/img/favorite_star2_56x56.png';
   let imgTitle = 'Restaurant is favorite';
 
   if (restaurant.is_favorite === 'false') {
@@ -139,19 +139,54 @@ self.addModalForReviews = (container) => {
   spanInChildDiv.onclick = function () {
     modalDiv.style.display = 'none';
   };
-  const pInDivChild = document.createElement('p');
-  pInDivChild.innerHTML = '';
+  const divForTextarea = document.createElement('div');
+  divForTextarea.classList.add('center-div');
   const textAreaChild = document.createElement('textarea');
   textAreaChild.rows = 20;
-  textAreaChild.cols = 100;
   textAreaChild.placeholder = 'Please type here the review ' +
-    'content and then click the Submit button';
-  
+  'content and then click the Submit button';
+  const submitButton = document.createElement('button');
+  submitButton.type = 'button';
+  submitButton.innerText = 'Submit the review';
+  submitButton.title = 'Press this button to submit the review';
+  submitButton.id = 'modal-submit-button';
+  submitButton.classList.add('submit-disabled');
+  submitButton.disabled = true;
+  // add watchers on changes for the textarea
+  textAreaChild.addEventListener('mouseover', (evnt) =>{
+    self.onTextAreaContentChange(evnt);
+  });
+  textAreaChild.addEventListener('click', (evnt) =>{
+    self.onTextAreaContentChange(evnt);
+  });
+  textAreaChild.addEventListener('mouseout', (evnt) =>{
+    self.onTextAreaContentChange(evnt);
+  });
+  textAreaChild.addEventListener('keyup', (evnt) =>{
+    self.onTextAreaContentChange(evnt);
+  });
+
+  divForTextarea.appendChild(textAreaChild);
+  divForTextarea.appendChild(submitButton);
   modalDivChild.appendChild(spanInChildDiv);
-  modalDivChild.appendChild(pInDivChild);
-  modalDivChild.appendChild(textAreaChild);
+  modalDivChild.appendChild(divForTextarea);
   modalDiv.appendChild(modalDivChild);
   container.appendChild(modalDiv);
+};
+self.onTextAreaContentChange = (evnt) => {
+  self.isValidSubmit(!evnt.fromElement ||
+    !evnt.fromElement.value ? false : true);
+};
+self.isValidSubmit = (isEnabled) => {
+  const submitButton = document.getElementById('modal-submit-button');
+  console.log('this should: ', !isEnabled);
+  console.log('the button is: ', submitButton);
+  submitButton.disabled = !isEnabled;
+  if (!isEnabled && !submitButton.classList.contains('submit-disabled')) {
+    submitButton.classList.add('submit-disabled');
+  } else if (isEnabled && submitButton.classList.contains('submit-disabled')) {
+    submitButton.classList.remove('submit-disabled');
+  }
 };
 
 /**
