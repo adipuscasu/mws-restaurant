@@ -72,6 +72,8 @@ self.addTabIndex = () => {
 self.fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  self.addFavoriteButton(name);
+  self.addModalForReviews(name);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
@@ -83,16 +85,33 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
-  // adds the Favorite/Unfavorite button
-  const btn = document.createElement('BUTTON');
-  const favText = restaurant.is_favorite === 'true' ?
-    'Set Unfavorite' : 'Set Favorite';
-  if (restaurant.is_favorite === 'false') {
-    btn.classList.add('btn-unfavorite');
-  } else {
-    btn.classList.add('btn-favorite');
+
+
+  // fill operating hours
+  if (restaurant.operating_hours) {
+    fillRestaurantHoursHTML();
   }
-  btn.addEventListener('click', function () {
+  // fill reviews
+  fillReviewsHTML();
+};
+
+self.addFavoriteButton = (container) => {
+  // adds the Favorite/Unfavorite button
+  const favImg = document.createElement('img');
+  favImg.classList.add('div-img-pull-right');
+  let aImgSrc = '/img/favorite_star_56x56.png';
+  let imgTitle = 'Restaurant is favorite';
+
+  if (restaurant.is_favorite === 'false') {
+    aImgSrc = '/img/unfavorite_star_56x56.png';
+    imgTitle = 'Restaurant is not favorite';
+  }
+  favImg.src = aImgSrc;
+  favImg.title = imgTitle;
+  favImg.alt = imgTitle;
+  container.appendChild(favImg);
+
+  favImg.addEventListener('click', function () {
     DBHelper.setRestaurantFavorite(restaurant, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -103,19 +122,36 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
       addTabIndex();
     });
   });
+};
 
-  const txtButton = document.createTextNode(favText);
-  btn.appendChild(txtButton);
-  const divForBtn = document.createElement('div');
-  divForBtn.appendChild(btn);
-  name.appendChild(divForBtn);
-
-  // fill operating hours
-  if (restaurant.operating_hours) {
-    fillRestaurantHoursHTML();
+self.addModalForReviews = (container) => {
+  if (!container) {
+    return;
   }
-  // fill reviews
-  fillReviewsHTML();
+  const modalDiv = document.createElement('div');
+  modalDiv.classList.add('modal');
+  modalDiv.id = 'modalReviewsEdit';
+  const modalDivChild = document.createElement('div');
+  modalDivChild.classList.add('modal-content');
+  const spanInChildDiv = document.createElement('span');
+  spanInChildDiv.classList.add('close');
+  spanInChildDiv.innerHTML = '&times;';
+  spanInChildDiv.onclick = function () {
+    modalDiv.style.display = 'none';
+  };
+  const pInDivChild = document.createElement('p');
+  pInDivChild.innerHTML = '';
+  const textAreaChild = document.createElement('textarea');
+  textAreaChild.rows = 20;
+  textAreaChild.cols = 100;
+  textAreaChild.placeholder = 'Please type here the review ' +
+    'content and then click the Submit button';
+  
+  modalDivChild.appendChild(spanInChildDiv);
+  modalDivChild.appendChild(pInDivChild);
+  modalDivChild.appendChild(textAreaChild);
+  modalDiv.appendChild(modalDivChild);
+  container.appendChild(modalDiv);
 };
 
 /**
@@ -161,6 +197,8 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const revText = 'Add review';
   btnReview.addEventListener('click', function () {
     console.log('adding review');
+    const modalDiv = document.getElementById('modalReviewsEdit');
+    modalDiv.style.display = 'block';
     DBHelper.addReviewForRestaurant(restaurant, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {

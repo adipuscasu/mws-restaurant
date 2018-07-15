@@ -21,9 +21,9 @@
           "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095563444,
-        "updatedAt": "2018-07-12T20:15:22.358Z",
+        "updatedAt": "2018-07-15T09:06:06.553Z",
         "id": 1,
-        "is_favorite": "true"
+        "is_favorite": "false"
       },
       {
         "name": "Emily",
@@ -45,8 +45,8 @@
           "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
         },
         "createdAt": 1504095568414,
-        "updatedAt": "2018-07-13T19:43:24.828Z",
-        "is_favorite": "false",
+        "updatedAt": "2018-07-15T08:08:36.579Z",
+        "is_favorite": "true",
         "id": 2
       },
       {
@@ -69,9 +69,9 @@
           "Sunday": "11:30 am - 2:00 am"
         },
         "createdAt": 1504095571434,
-        "updatedAt": "2018-07-13T20:40:39.739Z",
+        "updatedAt": "2018-07-15T09:06:06.556Z",
         "id": 3,
-        "is_favorite": "true"
+        "is_favorite": "false"
       },
       {
         "name": "Katz's Delicatessen",
