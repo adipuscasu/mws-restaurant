@@ -86,13 +86,22 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
 
-
   // fill operating hours
-  if (restaurant.operating_hours) {
-    fillRestaurantHoursHTML();
+  if (self.restaurant.operating_hours) {
+    self.fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+
+  DBHelper.fetchReviewsByRestaurantId(self.restaurant.id,
+    (error, reviewsResult) => {
+      if (error) {
+        console.log('Error retrieving reviews: ', error);
+      }
+      if (reviewsResult && reviewsResult.length > 0) {
+        self.restaurant.reviews = reviewsResult;
+      }
+      fillReviewsHTML();
+    });
 };
 
 self.addFavoriteButton = (container) => {
@@ -111,7 +120,7 @@ self.addFavoriteButton = (container) => {
   favImg.alt = imgTitle;
   container.appendChild(favImg);
 
-  favImg.addEventListener('click', function () {
+  favImg.addEventListener('click', () => {
     DBHelper.setRestaurantFavorite(restaurant, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -144,7 +153,8 @@ self.addModalForReviews = (container) => {
   const textAreaChild = document.createElement('textarea');
   textAreaChild.rows = 20;
   textAreaChild.placeholder = 'Please type here the review ' +
-  'content and then click the Submit button';
+    'content and then click the Submit button';
+  textAreaChild.id = 'reviews-textarea';
   const submitButton = document.createElement('button');
   submitButton.type = 'button';
   submitButton.innerText = 'Submit the review';
@@ -152,17 +162,33 @@ self.addModalForReviews = (container) => {
   submitButton.id = 'modal-submit-button';
   submitButton.classList.add('submit-disabled');
   submitButton.disabled = true;
+  submitButton.addEventListener('click', () => {
+    const txtArea = document.getElementById('reviews-textarea');
+    const reviewText = txtArea.txtValue;
+    DBHelper.addReviewInRestaurantById(restaurant, (error, restaurant) => {
+      self.restaurant = restaurant;
+      if (!restaurant) {
+        console.error(error);
+        return;
+      }
+      fillRestaurantHTML();
+      addTabIndex();
+    });
+  });
   // add watchers on changes for the textarea
-  textAreaChild.addEventListener('mouseover', (evnt) =>{
+  textAreaChild.addEventListener('mouseover', (evnt) => {
     self.onTextAreaContentChange(evnt);
   });
-  textAreaChild.addEventListener('click', (evnt) =>{
+  textAreaChild.addEventListener('click', (evnt) => {
     self.onTextAreaContentChange(evnt);
   });
-  textAreaChild.addEventListener('mouseout', (evnt) =>{
+  textAreaChild.addEventListener('mouseout', (evnt) => {
     self.onTextAreaContentChange(evnt);
   });
-  textAreaChild.addEventListener('keyup', (evnt) =>{
+  textAreaChild.addEventListener('keyup', (evnt) => {
+    self.onTextAreaContentChange(evnt);
+  });
+  textAreaChild.addEventListener('keydown', (evnt) => {
     self.onTextAreaContentChange(evnt);
   });
 
@@ -173,14 +199,15 @@ self.addModalForReviews = (container) => {
   modalDiv.appendChild(modalDivChild);
   container.appendChild(modalDiv);
 };
+
 self.onTextAreaContentChange = (evnt) => {
-  self.isValidSubmit(!evnt.fromElement ||
-    !evnt.fromElement.value ? false : true);
+  let txtValue = evnt.target && evnt.target.value ? evnt.target.value :
+    evnt.srcElement && evnt.srcElement.value ? evnt.srcElement.value : '';
+  self.isSubmitValid(txtValue ? true : false);
 };
-self.isValidSubmit = (isEnabled) => {
+
+self.isSubmitValid = (isEnabled) => {
   const submitButton = document.getElementById('modal-submit-button');
-  console.log('this should: ', !isEnabled);
-  console.log('the button is: ', submitButton);
   submitButton.disabled = !isEnabled;
   if (!isEnabled && !submitButton.classList.contains('submit-disabled')) {
     submitButton.classList.add('submit-disabled');
@@ -196,8 +223,7 @@ self.isValidSubmit = (isEnabled) => {
 self.fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
   for (let key in operatingHours) {
-    if (operatingHours.hasOwnProperty('key')) {
-      return;
+    if (operatingHours.hasOwnProperty(key)) {
       const row = document.createElement('tr');
 
       const day = document.createElement('td');
@@ -207,7 +233,6 @@ self.fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours
       const time = document.createElement('td');
       time.innerHTML = operatingHours[key];
       row.appendChild(time);
-
       hours.appendChild(row);
     }
   }
@@ -219,19 +244,35 @@ self.fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours
  */
 self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  // clear the contents of the container first
-  // this is to prevent duplicating reviews
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+  self.addReviewsAddButton(container);
+  if (!reviews) {
+    const noReviews = document.createElement('p');
+    noReviews.innerHTML = 'No reviews yet!';
+    container.appendChild(noReviews);
+    return;
+  }
+  const ul = document.getElementById('reviews-list');
+  reviews.forEach((review) => {
+    ul.appendChild(createReviewHTML(review));
+  });
+  container.appendChild(ul);
+};
+
+self.addReviewsAddButton = (container) => {
+  // clear the contents of the container first
+  // this is to prevent duplicating reviews
+  const testForDiv = document.getElementById('div-add-reviews-div');
+  if (testForDiv) {
+    document.removeChild(testForDiv);
+  }
+  
   // adds the Add review button
   const btnReview = document.createElement('BUTTON');
   const revText = 'Add review';
   btnReview.addEventListener('click', function () {
-    console.log('adding review');
     const modalDiv = document.getElementById('modalReviewsEdit');
     modalDiv.style.display = 'block';
     DBHelper.addReviewForRestaurant(restaurant, (error, restaurant) => {
@@ -244,24 +285,12 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
       addTabIndex();
     });
   });
-
   const txtButtonReview = document.createTextNode(revText);
   btnReview.appendChild(txtButtonReview);
   const divForbtnReview = document.createElement('div');
+  divForbtnReview.id = 'div-add-reviews-button';
   divForbtnReview.appendChild(btnReview);
-  title.appendChild(divForbtnReview);
-
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach((review) => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
+  container.appendChild(divForbtnReview);
 };
 
 /**
@@ -276,7 +305,7 @@ self.createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt);
   li.appendChild(date);
 
   const rating = document.createElement('p');

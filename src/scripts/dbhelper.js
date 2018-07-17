@@ -8,7 +8,7 @@ class DBHelper {
    */
   static get DATABASE_URL () {
     const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}/`;
   }
 
   /**
@@ -18,7 +18,7 @@ class DBHelper {
    */
   static fetchRestaurants (callback) {
     const idbHelper = new IDBHelper(idb);
-    fetch(this.DATABASE_URL)
+    fetch(this.DATABASE_URL+'restaurants')
       .then(function (response) {
         if (response.ok) {
           response.json()
@@ -50,9 +50,8 @@ class DBHelper {
     if (!id) {
       return;
     }
-    console.log('fetching restaurant by id');
     const idbHelper = new IDBHelper(idb);
-    const rUrl = this.DATABASE_URL + '/' + id;
+    const rUrl = this.DATABASE_URL + 'restaurants/' + id;
 
     fetch(rUrl)
       .then(function (response) {
@@ -75,6 +74,39 @@ class DBHelper {
       });
   }
 
+    /**
+   * Fetch reviews for a restaurant by identifier.
+   * @param {string} id
+   * @param {*} callback
+   */
+  static fetchReviewsByRestaurantId (id, callback) {
+    if (!id) {
+      return;
+    }
+    const idbHelper = new IDBHelper(idb);
+    const rUrl = this.DATABASE_URL + 'reviews/?restaurant_id=' + id;
+
+    fetch(rUrl)
+      .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (data) {
+            callback(null, data);
+          });
+        } else {
+          throw response.statusText;
+        }
+      })
+      .catch(function (error) {
+        console.log('error: ', error);
+        const DBPromise = idbHelper.openDatabase();
+        DBPromise.then(function (db) {
+          idbHelper.getReviewsForRestaurantById(db, id).then(function (reviews) {
+            callback(null, reviews);
+          });
+        });
+      });
+  }
+
   /**
    * Sets favorite to true or false for a restaurant
    * @param {restaurant} restaurant object
@@ -85,7 +117,7 @@ class DBHelper {
       return;
     }
     let isFavorite = restaurant.is_favorite === 'true';
-    const rUrl = this.DATABASE_URL + '/' + restaurant.id +
+    const rUrl = this.DATABASE_URL + 'restaurants/' + restaurant.id +
       '/?is_favorite=' + !isFavorite;
     fetch(rUrl, {
         method: 'PUT',

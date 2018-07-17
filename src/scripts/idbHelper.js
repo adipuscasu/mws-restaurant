@@ -17,6 +17,7 @@ class IDBHelper {
         this.saveRestaurant = IDBHelper.saveRestaurant;
         this.readAllIdbData = IDBHelper.readAllIdbData;
         this.getRestaurantById = IDBHelper.getRestaurantById;
+        this.getReviewsForRestaurantById  = IDBHelper.getReviewsForRestaurantById;
     }
 
     /**
@@ -24,12 +25,16 @@ class IDBHelper {
      * @return {Promise} Promise
      */
     static openDatabase () {
-        return this.idb.open(dbName, 1, function (upgradeDb) {
+        return this.idb.open(dbName, 2, function (upgradeDb) {
             console.log('inside db open: ', upgradeDb);
             const store = upgradeDb.createObjectStore('restaurants', {
                 keyPath: 'id',
             });
             store.createIndex('createdAt', 'createdAt');
+            const storeReviews = upgradeDb.createObjectStore('reviews', {
+                keyPath: 'id',
+            });
+            storeReviews.createIndex('createdAt', 'createdAt');
         });
     }
 
@@ -146,6 +151,22 @@ class IDBHelper {
         }
         const tx = db.transaction(['restaurants'], 'readonly');
         const store = tx.objectStore('restaurants');
+        const id = parseInt(restaurantId);
+        return store.get(id);
+    }
+
+    /**
+     * @description Returns a restaurant object
+     * @param {IDBDatabase} db
+     * @param {Number} restaurantId
+     * @return {restaurant} restaurant
+     */
+    static getReviewsForRestaurantById (db, restaurantId) {
+        if (!db) {
+            return Promise.resolve();
+        }
+        const tx = db.transaction(['reviews'], 'readonly');
+        const store = tx.objectStore('reviews');
         const id = parseInt(restaurantId);
         return store.get(id);
     }
