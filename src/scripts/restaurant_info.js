@@ -88,7 +88,7 @@ self.fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   // fill operating hours
   if (self.restaurant.operating_hours) {
-    self.fillRestaurantHoursHTML();
+    fillRestaurantHoursHTML();
   }
   // fill reviews
 
@@ -145,16 +145,50 @@ self.addModalForReviews = (container) => {
   const spanInChildDiv = document.createElement('span');
   spanInChildDiv.classList.add('close');
   spanInChildDiv.innerHTML = '&times;';
-  spanInChildDiv.onclick = function () {
+  spanInChildDiv.onclick = () => {
     modalDiv.style.display = 'none';
   };
+  const reviewForm = document.createElement('form');
+  const brElement = document.createElement('br');
+  // input text for reviewer name
+  const nameLabel = document.createElement('label');
+  nameLabel.innerHTML = 'Reviewer name';
+  nameLabel.for = 'review-input-name';
+  reviewForm.appendChild(nameLabel);
+
+  const nameInput = document.createElement('input');
+  nameInput.id = 'review-input-name';
+  nameInput.classList.add('review-input-name');
+  nameInput.type = 'text';
+  nameInput.placeholder = 'Please type the reviewer name';
+  nameInput.size = nameInput.placeholder.length;
+  reviewForm.appendChild(nameInput);
+  const brElement2 = document.createElement('br');
+  reviewForm.appendChild(brElement2);
+  // input text for rating
+  const ratingLabel = document.createElement('label');
+  ratingLabel.innerHTML = 'Choose review rating';
+  reviewForm.appendChild(ratingLabel);
+
+  const ratingInput = document.createElement('input');
+  ratingInput.id = 'review-input-rating';
+  ratingInput.name = 'review-input-rating';
+  ratingInput.type = 'range';
+  ratingInput.min = 0;
+  ratingInput.max = 5;
+  ratingInput.step = 1;
+  reviewForm.appendChild(ratingInput);
+  reviewForm.appendChild(brElement);
+
+
   const divForTextarea = document.createElement('div');
-  divForTextarea.classList.add('center-div');
   const textAreaChild = document.createElement('textarea');
   textAreaChild.rows = 20;
   textAreaChild.placeholder = 'Please type here the review ' +
-    'content and then click the Submit button';
+  'content and then click the Submit button';
   textAreaChild.id = 'reviews-textarea';
+  reviewForm.appendChild(textAreaChild);
+
   const submitButton = document.createElement('button');
   submitButton.type = 'button';
   submitButton.innerText = 'Submit the review';
@@ -177,23 +211,24 @@ self.addModalForReviews = (container) => {
   });
   // add watchers on changes for the textarea
   textAreaChild.addEventListener('mouseover', (evnt) => {
-    self.onTextAreaContentChange(evnt);
+    onTextAreaContentChange(evnt);
   });
   textAreaChild.addEventListener('click', (evnt) => {
-    self.onTextAreaContentChange(evnt);
+    onTextAreaContentChange(evnt);
   });
   textAreaChild.addEventListener('mouseout', (evnt) => {
-    self.onTextAreaContentChange(evnt);
+    onTextAreaContentChange(evnt);
   });
   textAreaChild.addEventListener('keyup', (evnt) => {
-    self.onTextAreaContentChange(evnt);
+    onTextAreaContentChange(evnt);
   });
   textAreaChild.addEventListener('keydown', (evnt) => {
-    self.onTextAreaContentChange(evnt);
+    onTextAreaContentChange(evnt);
   });
-
-  divForTextarea.appendChild(textAreaChild);
-  divForTextarea.appendChild(submitButton);
+  reviewForm.appendChild(submitButton);
+  
+  divForTextarea.classList.add('center-div');
+  divForTextarea.appendChild(reviewForm);
   modalDivChild.appendChild(spanInChildDiv);
   modalDivChild.appendChild(divForTextarea);
   modalDiv.appendChild(modalDivChild);
@@ -203,7 +238,7 @@ self.addModalForReviews = (container) => {
 self.onTextAreaContentChange = (evnt) => {
   let txtValue = evnt.target && evnt.target.value ? evnt.target.value :
     evnt.srcElement && evnt.srcElement.value ? evnt.srcElement.value : '';
-  self.isSubmitValid(txtValue ? true : false);
+  isSubmitValid(txtValue ? true : false);
 };
 
 self.isSubmitValid = (isEnabled) => {

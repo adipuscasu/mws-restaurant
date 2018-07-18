@@ -436,7 +436,8 @@ img:not([src]) {
 /* buttons for adding reviews of setting favs */
 
 button {
-  background-color: #4CAF50;  /* Green */
+  background-color: #4CAF50;
+  /* Green */
   border: none;
   color: white;
   padding: 20px;
@@ -447,12 +448,14 @@ button {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 12px;
-
 }
+
 button.submit-disabled {
-  background-color: grey;  /* Grey */
+  background-color: grey;
+  /* Grey */
   cursor: default;
 }
+
 button.btn-unfavorite {
   background-color: rgb(246, 250, 11);
   color: rgb(0, 0, 0);
@@ -461,9 +464,11 @@ button.btn-unfavorite {
 button:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 button.submit-disabled:hover {
   box-shadow: none;
 }
+
 textarea {
   resize: none;
   width: 100%;
@@ -471,16 +476,26 @@ textarea {
   position: relative;
 }
 
-.div-img-pull-right{
+.div-img-pull-right {
   top: 14px;
   left: 10px;
   width: 48px;
   height: 48px;
   position: relative;
 }
-.center-div{
+
+.center-div {
   margin: auto;
   width: 80%;
   border: 3px solid green;
   padding: 10px;
+}
+
+.review-input-name {
+  position: relative;
+  left: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 20pt;
+  font-weight: 200;
+  letter-spacing: 0;
 }
