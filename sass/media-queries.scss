@@ -11,8 +11,8 @@
     .inside {
       display: -ms-grid;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 80px 1100px 66px;
+      grid-template-columns: 1fr;
+      grid-template-rows: 80px 1fr 66px;
       grid-template-areas:
           "header header"
           "content content"
@@ -29,7 +29,7 @@
       display: grid;
       display: -ms-grid;
       grid-template-columns: 900px 1fr;
-      grid-template-rows: 900px 1fr;
+      grid-template-rows: 1000px 1fr;
       grid-template-areas:
           "restaurant-area map-area"
           "reviews-area reviews-area";

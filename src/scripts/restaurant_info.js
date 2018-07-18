@@ -72,8 +72,8 @@ self.addTabIndex = () => {
 self.fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
-  self.addFavoriteButton(name);
-  self.addModalForReviews(name);
+  addFavoriteButton(name);
+  addModalForReviews(name);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
