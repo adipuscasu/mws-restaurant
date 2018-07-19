@@ -1,6 +1,7 @@
 let restaurant;
 let map;
 
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -133,6 +134,11 @@ self.addFavoriteButton = (container) => {
   });
 };
 
+/**
+ * @description Adds a modal form containing the
+ * restaurant review elements
+ * @param {element} container Is an Html element
+ */
 self.addModalForReviews = (container) => {
   if (!container) {
     return;
@@ -185,7 +191,7 @@ self.addModalForReviews = (container) => {
   const textAreaChild = document.createElement('textarea');
   textAreaChild.rows = 20;
   textAreaChild.placeholder = 'Please type here the review ' +
-  'content and then click the Submit button';
+    'content and then click the Submit button';
   textAreaChild.id = 'reviews-textarea';
   reviewForm.appendChild(textAreaChild);
 
@@ -197,9 +203,17 @@ self.addModalForReviews = (container) => {
   submitButton.classList.add('submit-disabled');
   submitButton.disabled = true;
   submitButton.addEventListener('click', () => {
-    const txtArea = document.getElementById('reviews-textarea');
-    const reviewText = txtArea.txtValue;
-    DBHelper.addReviewInRestaurantById(restaurant, (error, restaurant) => {
+    const reviewName = document.getElementById('review-input-name').value;
+    const reviewRating = document.getElementById('review-input-rating').value;
+    const reviewComment = document.getElementById('reviews-textarea').value;
+    const review = {
+      restaurant_id: self.restaurant.id,
+      name: reviewName,
+      rating: reviewRating,
+      comment: reviewComment,
+    };
+
+    DBHelper.addReviewForRestaurant(review, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
@@ -226,7 +240,7 @@ self.addModalForReviews = (container) => {
     onTextAreaContentChange(evnt);
   });
   reviewForm.appendChild(submitButton);
-  
+
   divForTextarea.classList.add('center-div');
   divForTextarea.appendChild(reviewForm);
   modalDivChild.appendChild(spanInChildDiv);
@@ -296,6 +310,11 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   container.appendChild(ul);
 };
 
+/**
+ * @description Adds a button element into the Html container
+ * sent as parameter
+ * @param {element} container Is an Html element
+ */
 self.addReviewsAddButton = (container) => {
   // clear the contents of the container first
   // this is to prevent duplicating reviews
@@ -303,22 +322,13 @@ self.addReviewsAddButton = (container) => {
   if (testForDiv) {
     document.removeChild(testForDiv);
   }
-  
+
   // adds the Add review button
   const btnReview = document.createElement('BUTTON');
   const revText = 'Add review';
   btnReview.addEventListener('click', function () {
     const modalDiv = document.getElementById('modalReviewsEdit');
     modalDiv.style.display = 'block';
-    DBHelper.addReviewForRestaurant(restaurant, (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
-      fillRestaurantHTML();
-      addTabIndex();
-    });
   });
   const txtButtonReview = document.createTextNode(revText);
   btnReview.appendChild(txtButtonReview);
@@ -355,7 +365,7 @@ self.createReviewHTML = (review) => {
 };
 
 /**
- * Add restaurant name to the breadcrumb navigation menu
+ * @description Add restaurant name to the breadcrumb navigation menu
  * @param {*} restaurant
  */
 self.fillBreadcrumb = (restaurant = self.restaurant) => {
@@ -364,6 +374,7 @@ self.fillBreadcrumb = (restaurant = self.restaurant) => {
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
 };
+
 
 /**
  * Get a parameter by name from page URL.

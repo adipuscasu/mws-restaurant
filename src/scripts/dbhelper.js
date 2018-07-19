@@ -18,7 +18,7 @@ class DBHelper {
    */
   static fetchRestaurants (callback) {
     const idbHelper = new IDBHelper(idb);
-    fetch(this.DATABASE_URL+'restaurants')
+    fetch(this.DATABASE_URL + 'restaurants')
       .then(function (response) {
         if (response.ok) {
           response.json()
@@ -74,7 +74,7 @@ class DBHelper {
       });
   }
 
-    /**
+  /**
    * Fetch reviews for a restaurant by identifier.
    * @param {string} id
    * @param {*} callback
@@ -131,6 +131,46 @@ class DBHelper {
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client
         body: JSON.stringify({}),
+        // body data type must match "Content-Type" header
+      })
+      .then((response) => response.json()
+        .then(function (data) {
+          if (callback) {
+            callback(null, data);
+          }
+        })
+      ) // parses response to JSON
+      .catch((error) => console.error(`Fetch Error =\n`, error));
+  }
+  /**
+   * @description Adds a review to a restaurant
+   * @param {Number} restaurantId Restaurant identifier
+   * @param {review} review A restaurant review object
+   * @param {Function} callback Callback function to update the restaurant
+   */
+  static addReviewForRestaurant (review, callback) {
+    if (!review || !review.restaurant_id) {
+      return;
+    }
+    const addReviewUrl = this.DATABASE_URL + 'reviews/';
+    const reviewObject = {
+      'restaurant_id': review.restaurant_id,
+      'name': review.name ? review.name : 'unnamed reviewer',
+      'rating': review.rating >= 0 && review.rating <= 5 ? review.rating : 0,
+      'comments': review.comments,
+    };
+    fetch(addReviewUrl, {
+        method: 'POST',
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache',
+        credentials: 'same-origin', // include, same-origin, *omit
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(reviewObject),
         // body data type must match "Content-Type" header
       })
       .then((response) => response.json()
