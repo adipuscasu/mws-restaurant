@@ -160,6 +160,7 @@ self.addModalForReviews = (container) => {
   const nameLabel = document.createElement('label');
   nameLabel.innerHTML = 'Reviewer name';
   nameLabel.for = 'review-input-name';
+  nameLabel.tabIndex = 0;
   reviewForm.appendChild(nameLabel);
 
   const nameInput = document.createElement('input');
@@ -174,6 +175,7 @@ self.addModalForReviews = (container) => {
   // input text for rating
   const ratingLabel = document.createElement('label');
   ratingLabel.innerHTML = 'Choose review rating';
+  ratingLabel.tabIndex = 0;
   reviewForm.appendChild(ratingLabel);
 
   const ratingInput = document.createElement('input');
@@ -210,17 +212,18 @@ self.addModalForReviews = (container) => {
       restaurant_id: self.restaurant.id,
       name: reviewName,
       rating: reviewRating,
-      comment: reviewComment,
+      comments: reviewComment,
     };
-
-    DBHelper.addReviewForRestaurant(review, (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
+    DBHelper.addReviewForRestaurant(review, (error, review) => {
+      self.restaurant.reviews.push(review);
+      if (!review) {
         console.error(error);
         return;
       }
-      fillRestaurantHTML();
-      addTabIndex();
+      modalDiv.style.display = 'none';
+      fillReviewsHTML();
+      // fillRestaurantHTML();
+      // addTabIndex();
     });
   });
   // add watchers on changes for the textarea
@@ -291,12 +294,29 @@ self.fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours
  * Create all reviews HTML and add them to the webpage.
  * @param {*} reviews
  */
-self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+self.fillReviewsHTML = () => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
-  self.addReviewsAddButton(container);
+  addReviewsLabel(container);
+  addReviewsAddButton(container);
+  addReviewsListItems(container);
+};
+
+/**
+ * @description Adds the refreshed list of reviews
+ * @param {HtmlElement} container the Html element into which to store the list
+ * @param {Array<reviews>} reviews The list of reviews
+ */
+self.addReviewsListItems = (container, reviews = self.restaurant.reviews) => {
+  if (!container) {
+    return;
+  }
+  const oldList = document.getElementById('reviews-list');
+  if (oldList) {
+    container.removeChild(oldList);
+    const newUl = document.createElement('ul');
+    newUl.id = 'reviews-list';
+    container.appendChild(newUl);
+  }
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -311,6 +331,24 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 };
 
 /**
+ * @description Adds a label for the reviews section
+ * @param {HtmlElement} container Html elment
+ */
+self.addReviewsLabel = (container) => {
+  if (!container) {
+    return;
+  }
+  const labelElement = document.getElementById('label-for-reviews');
+  if (labelElement) {
+    container.removeChild(labelElement);
+  }
+  const title = document.createElement('h3');
+  title.id = 'label-for-reviews';
+  title.innerHTML = 'Reviews';
+  container.appendChild(title);
+};
+
+/**
  * @description Adds a button element into the Html container
  * sent as parameter
  * @param {element} container Is an Html element
@@ -318,13 +356,14 @@ self.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 self.addReviewsAddButton = (container) => {
   // clear the contents of the container first
   // this is to prevent duplicating reviews
-  const testForDiv = document.getElementById('div-add-reviews-div');
+  const testForDiv = document.getElementById('div-add-reviews-button');
   if (testForDiv) {
-    document.removeChild(testForDiv);
+    container.removeChild(testForDiv);
   }
 
   // adds the Add review button
   const btnReview = document.createElement('BUTTON');
+  btnReview.id = 'btn-add-review';
   const revText = 'Add review';
   btnReview.addEventListener('click', function () {
     const modalDiv = document.getElementById('modalReviewsEdit');
@@ -347,6 +386,14 @@ self.createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  const editReview = document.createElement('span');
+  editReview.classList.add('close');
+  editReview.innerHTML = '&times;';
+  editReview.title = 'Remove this review';
+  editReview.onclick = () => {
+    deleteReview(review);
+  };
+  name.appendChild(editReview);
   li.appendChild(name);
 
   const date = document.createElement('p');
@@ -362,6 +409,25 @@ self.createReviewHTML = (review) => {
   li.appendChild(comments);
 
   return li;
+};
+
+self.deleteReview = (review, reviews = restaurant.reviews) => {
+  if (!review) {
+    return;
+  }
+  DBHelper.removeReviewForRestaurant(review, (error, review) => {
+    if (!review) {
+      console.error(error);
+      return;
+    }
+    for (let reviewsIndex = 0; reviewsIndex < reviews.length; reviewsIndex++) {
+      if (reviews[reviewsIndex] = review) {
+        reviews.splice(reviewsIndex, 1);
+        fillReviewsHTML();
+        return;
+      }
+    }
+  });
 };
 
 /**

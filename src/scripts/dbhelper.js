@@ -144,7 +144,6 @@ class DBHelper {
   }
   /**
    * @description Adds a review to a restaurant
-   * @param {Number} restaurantId Restaurant identifier
    * @param {review} review A restaurant review object
    * @param {Function} callback Callback function to update the restaurant
    */
@@ -159,6 +158,7 @@ class DBHelper {
       'rating': review.rating >= 0 && review.rating <= 5 ? review.rating : 0,
       'comments': review.comments,
     };
+    console.log('I got the review: ', reviewObject);
     fetch(addReviewUrl, {
         method: 'POST',
         mode: 'cors', // no-cors, cors, *same-origin
@@ -175,6 +175,33 @@ class DBHelper {
       })
       .then((response) => response.json()
         .then(function (data) {
+          console.log('this returns: ', data);
+          if (callback) {
+            callback(null, data);
+          }
+        })
+      ) // parses response to JSON
+      .catch((error) => console.error(`Fetch Error =\n`, error));
+  }
+
+  /**
+   * @description Removes a review from a restaurant
+   * @param {review} review A restaurant review object
+   * @param {Function} callback Callback function to update the restaurant
+   */
+  static removeReviewForRestaurant (review, callback) {
+    if (!review || !review.id) {
+      return;
+    }
+    const removeReviewUrl = this.DATABASE_URL +
+     'reviews/' + review.id;
+    console.log('I got the review: ', review);
+    console.log('and the remove url: ', removeReviewUrl);
+    fetch(removeReviewUrl, {
+        method: 'DELETE'})
+      .then((response) => response.json()
+        .then(function (data) {
+          console.log('delete returns: ', data);
           if (callback) {
             callback(null, data);
           }
