@@ -20,7 +20,8 @@
   const exec = require('child_process').exec;
   const webp = require('gulp-webp');
   const gzip = require('gulp-gzip');
-  const inlinesource = require('gulp-inline-source');
+  const log = require('fancy-log');
+  const critical = require('critical').stream;
 
   const paths = {
     styles: {
@@ -71,6 +72,19 @@
       console.log(stderr);
       cb(err);
     });
+  };
+
+  const criticalTask = () => {
+    return gulp.src('dist/*.html')
+      .pipe(critical({
+        base: './',
+        inline: true,
+        css: ['dist/css/styles.css'],
+      }))
+      .on('error', function (err) {
+        log.error(err.message);
+      })
+      .pipe(gulp.dest('dist2'));
   };
 
   const dev = gulp.series(
@@ -124,13 +138,17 @@
   function scripts () {
     return (
       gulp
-        .src(paths.scripts.src, {sourcemaps: true})
-        // .pipe(jshint('.jshintrc'))
-        // .pipe(jshint.reporter('default'))
-        .pipe(babel({presets: ['es2015']}))
-        .pipe(uglify())
-        .pipe(gulp.dest('dist/scripts/'))
-        // .pipe(notify({message: 'Scripts task complete'}))
+      .src(paths.scripts.src, {
+        sourcemaps: true,
+      })
+      // .pipe(jshint('.jshintrc'))
+      // .pipe(jshint.reporter('default'))
+      .pipe(babel({
+        presets: ['es2015'],
+      }))
+      .pipe(uglify())
+      .pipe(gulp.dest('dist/scripts/'))
+      // .pipe(notify({message: 'Scripts task complete'}))
     );
   }
 
@@ -162,9 +180,16 @@
    */
   function copyHtml () {
     return gulp.src('./*.html')
-    .pipe(inlinesource())
-    .pipe(gzip())
-    .pipe(gulp.dest('dist/'));
+      // .pipe(critical({
+      //   base: './',
+      //   inline: true,
+      //   css: ['dist/css/styles.css'],
+      // }))
+      // .on('error', function (err) {
+      //   log.error(err.message);
+      // })
+      .pipe(gzip())
+      .pipe(gulp.dest('dist/'));
   }
 
   /**
@@ -177,17 +202,29 @@
       .pipe(webp())
       .pipe(
         imagemin([
-          imagemin.gifsicle({interlaced: true}),
-          imagemin.jpegtran({progressive: true}),
-          imagemin.optipng({optimizationLevel: 5}),
+          imagemin.gifsicle({
+            interlaced: true,
+          }),
+          imagemin.jpegtran({
+            progressive: true,
+          }),
+          imagemin.optipng({
+            optimizationLevel: 5,
+          }),
           imagemin.svgo({
-            plugins: [{removeViewBox: true}, {cleanupIDs: false}],
+            plugins: [{
+              removeViewBox: true,
+            }, {
+              cleanupIDs: false,
+            }],
           }),
         ])
       )
       .pipe(
         imagemin(['img/*.{jpg,png}'], 'dist/img/', {
-          use: [imageminWebp({quality: 50})],
+          use: [imageminWebp({
+            quality: 50,
+          })],
         })
       )
       .pipe(gulp.dest('dist/img'));
@@ -202,11 +239,21 @@
       .src('img/*')
       .pipe(
         imagemin([
-          imagemin.gifsicle({interlaced: true}),
-          imagemin.jpegtran({progressive: true}),
-          imagemin.optipng({optimizationLevel: 30}),
+          imagemin.gifsicle({
+            interlaced: true,
+          }),
+          imagemin.jpegtran({
+            progressive: true,
+          }),
+          imagemin.optipng({
+            optimizationLevel: 30,
+          }),
           imagemin.svgo({
-            plugins: [{removeViewBox: true}, {cleanupIDs: false}],
+            plugins: [{
+              removeViewBox: true,
+            }, {
+              cleanupIDs: false,
+            }],
           }),
         ])
       )
@@ -226,8 +273,8 @@
   }
 
   /*
-    * You can use CommonJS `exports` module notation to declare tasks
-    */
+   * You can use CommonJS `exports` module notation to declare tasks
+   */
   exports.clean = clean;
   exports.copyLibs = copyLibs;
   exports.styles = styles;

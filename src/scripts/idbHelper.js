@@ -18,7 +18,7 @@ class IDBHelper {
         this.saveRestaurant = IDBHelper.saveRestaurant;
         this.readAllIdbData = IDBHelper.readAllIdbData;
         this.getRestaurantById = IDBHelper.getRestaurantById;
-        this.getReviewsForRestaurantById  = IDBHelper.getReviewsForRestaurantById;
+        this.getReviewsForRestaurantById = IDBHelper.getReviewsForRestaurantById;
     }
 
     /**
@@ -26,16 +26,21 @@ class IDBHelper {
      * @return {Promise} Promise
      */
     static openDatabase () {
-        return this.idb.open(dbName, 2, function (upgradeDb) {
-            console.log('inside db open: ', upgradeDb);
-            const store = upgradeDb.createObjectStore('restaurants', {
-                keyPath: 'id',
-            });
-            store.createIndex('createdAt', 'createdAt');
-            const storeReviews = upgradeDb.createObjectStore('reviews', {
-                keyPath: 'id',
-            });
-            storeReviews.createIndex('createdAt', 'createdAt');
+        return this.idb.open(dbName, 2, (upgradeDb) => {
+            // Note: we don't use 'break' in this switch statement,
+            // the fall-through behaviour is what we want.
+            switch (upgradeDb.oldVersion) {
+                case 0:
+                    const store = upgradeDb.createObjectStore('restaurants', {
+                        keyPath: 'id',
+                    });
+                    store.createIndex('createdAt', 'createdAt');
+                case 1:
+                    const storeReviews = upgradeDb.createObjectStore('reviews', {
+                        keyPath: 'id',
+                    });
+                    storeReviews.createIndex('createdAt', 'createdAt');
+            }
         });
     }
 
@@ -87,7 +92,7 @@ class IDBHelper {
         });
     }
 
-        /**
+    /**
      * @description Adds review records into the database
      * @param {Array<review>} reviews
      */
