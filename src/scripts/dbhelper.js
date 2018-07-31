@@ -23,7 +23,9 @@ class DBHelper {
         if (response.ok) {
           response.json()
             .then(function (data) {
-              idbHelper.populateDatabaseWithRestaurants(data);
+              if (idbHelper && idbHelper.populateDatabaseWithRestaurants) {
+                idbHelper.populateDatabaseWithRestaurants(data);
+              }
               callback(null, data);
             });
         } else {
@@ -90,7 +92,9 @@ class DBHelper {
       .then(function (response) {
         if (response.ok) {
           response.json().then(function (data) {
-            idbHelper.populateDatabaseWithReviews(data);
+            if (idbHelper && idbHelper.populateDatabaseWithReviews) {
+              idbHelper.populateDatabaseWithReviews(data);
+            }
             callback(null, data);
           });
         } else {

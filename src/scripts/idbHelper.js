@@ -43,7 +43,7 @@ class IDBHelper {
      * @description Deletes the old database
      */
     static deleteOldDatabase () {
-        let DBDeleteRequest = window.indexedDB.deleteDatabase(dbName);
+        let DBDeleteRequest = this.idb.delete(dbName);
         DBDeleteRequest.onerror = function () {
             console.log('Error deleting database.');
         };
