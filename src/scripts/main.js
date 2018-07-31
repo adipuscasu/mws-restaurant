@@ -102,6 +102,9 @@ window.addEventListener('load', (event, restaurants = self.restaurants) => {
     for (let i=0; i<=everything.length; i++) {
       if (everything[i]) {
         everything[i].setAttribute('tabindex', -1);
+        if (everything[i].nodeName === 'IFRAME') {
+          everything[i].title = 'Map frame';
+        }
       }
     }
 });

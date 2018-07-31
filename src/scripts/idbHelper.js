@@ -11,9 +11,10 @@ class IDBHelper {
     constructor (idb) {
         this.idb = idb;
         this.openDatabase = IDBHelper.openDatabase;
-        this.deleteDatabase = IDBHelper.deleteOldDatabase;
+        this.deleteOldDatabase = IDBHelper.deleteOldDatabase;
         this.createNewDatabase = IDBHelper.createNewDatabase;
-        this.populateDatabase = IDBHelper.populateDatabase;
+        this.populateDatabaseWithRestaurants = IDBHelper.populateDatabaseWithRestaurants;
+        this.populateDatabaseWithReviews = IDBHelper.populateDatabaseWithReviews;
         this.saveRestaurant = IDBHelper.saveRestaurant;
         this.readAllIdbData = IDBHelper.readAllIdbData;
         this.getRestaurantById = IDBHelper.getRestaurantById;
@@ -71,7 +72,7 @@ class IDBHelper {
      * @description Adds restaurant records into the database
      * @param {Array<restaurant>} restaurants
      */
-    static populateDatabase (restaurants) {
+    static populateDatabaseWithRestaurants (restaurants) {
         const dbPromise = this.openDatabase();
         dbPromise.then(function (db) {
             if (!db) {
@@ -82,6 +83,25 @@ class IDBHelper {
             const store = tx.objectStore('restaurants');
             restaurants.forEach(function (restaurant) {
                 store.put(restaurant);
+            });
+        });
+    }
+
+        /**
+     * @description Adds review records into the database
+     * @param {Array<review>} reviews
+     */
+    static populateDatabaseWithReviews (reviews) {
+        const dbPromise = this.openDatabase();
+        dbPromise.then(function (db) {
+            if (!db) {
+                return;
+            }
+
+            const tx = db.transaction('reviews', 'readwrite');
+            const store = tx.objectStore('reviews');
+            reviews.forEach(function (review) {
+                store.put(review);
             });
         });
     }

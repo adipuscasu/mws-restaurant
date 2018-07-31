@@ -23,7 +23,7 @@ class DBHelper {
         if (response.ok) {
           response.json()
             .then(function (data) {
-              idbHelper.populateDatabase(data);
+              idbHelper.populateDatabaseWithRestaurants(data);
               callback(null, data);
             });
         } else {
@@ -90,6 +90,7 @@ class DBHelper {
       .then(function (response) {
         if (response.ok) {
           response.json().then(function (data) {
+            idbHelper.populateDatabaseWithReviews(data);
             callback(null, data);
           });
         } else {
@@ -158,7 +159,6 @@ class DBHelper {
       'rating': review.rating >= 0 && review.rating <= 5 ? review.rating : 0,
       'comments': review.comments,
     };
-    console.log('I got the review: ', reviewObject);
     fetch(addReviewUrl, {
         method: 'POST',
         mode: 'cors', // no-cors, cors, *same-origin
@@ -175,7 +175,6 @@ class DBHelper {
       })
       .then((response) => response.json()
         .then(function (data) {
-          console.log('this returns: ', data);
           if (callback) {
             callback(null, data);
           }
@@ -195,13 +194,10 @@ class DBHelper {
     }
     const removeReviewUrl = this.DATABASE_URL +
      'reviews/' + review.id;
-    console.log('I got the review: ', review);
-    console.log('and the remove url: ', removeReviewUrl);
     fetch(removeReviewUrl, {
         method: 'DELETE'})
       .then((response) => response.json()
         .then(function (data) {
-          console.log('delete returns: ', data);
           if (callback) {
             callback(null, data);
           }
